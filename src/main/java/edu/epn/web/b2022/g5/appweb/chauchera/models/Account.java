@@ -4,8 +4,12 @@
  */
 package edu.epn.web.b2022.g5.appweb.chauchera.models;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 class Account{
@@ -15,23 +19,29 @@ class Account{
     private final int id;
     private double balance;
     private final Set<Type> accountTypes;
+    private final List<Transaction> transactionHistory;
     
     public Account(Type... accountTypes) {
         id = LAST_ID++;
         balance = 0;
         this.accountTypes = new HashSet(Arrays.asList(accountTypes));
+        this.transactionHistory = new ArrayList<>();
     }
     
-    public double getBalance() {
+    private double getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    private void setBalance(double balance) {
         this.balance = balance;
     }
     
     public boolean isType(Account.Type type ){
         return accountTypes.contains(type);
+    }
+    
+    public List<Transaction> getTransactionsView(){
+        return Collections.unmodifiableList(transactionHistory);
     }
     
     public void generate(double ammount){
@@ -41,6 +51,7 @@ class Account{
             throw new RuntimeException("Tipo de cuenta no correcto. Solamente una cuenta de ingreso puede generar ingresos.");
         }
         
+        transactionHistory.add(new Transaction(ammount,Instant.now()));
         setBalance(getBalance()+ammount);
     }
     
@@ -50,7 +61,8 @@ class Account{
         if(!isValidTransaction){
             throw new RuntimeException("Tipos de cuenta no correctos. La transferencia se puede realizar desde una cuenta de ingresos a una cuenta de gastos.");
         }
-        
+        transactionHistory.add(new Transaction(ammount,Instant.now()));
+        incomeAccount.transactionHistory.add(new Transaction(-ammount,Instant.now()));
         incomeAccount.setBalance(incomeAccount.getBalance()-ammount);
         setBalance(getBalance()+ammount);
     }

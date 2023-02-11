@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package edu.epn.web.b2022.g5.appweb.chauchera.models;
 
 import java.time.Instant;
@@ -16,9 +12,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-class Account{
+public class Account{
     private static int LAST_ID = 0;
-    enum Type{INCOME,SPENDING};
+    public enum Type{INCOME,SPENDING};
     
     private final int id;
     private String name;

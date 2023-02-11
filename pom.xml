@@ -9,6 +9,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <exec.mainClass>edu.epn.web.b2022.g5.appweb.chauchera.models.Main</exec.mainClass>
+        <exec.mainClass>edu.epn.web.b2022.g5.appweb.chauchera.Main</exec.mainClass>
     </properties>
 </project>

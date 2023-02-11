@@ -5,6 +5,9 @@
 package edu.epn.web.b2022.g5.appweb.chauchera.models;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Arrays;
@@ -23,11 +26,18 @@ class Account{
     private final Set<Type> accountTypes;
     private final List<Transaction> transactionHistory;
     
-    public Account(Type... accountTypes) {
+    public Account(String name,Type... accountTypes) {
         id = LAST_ID++;
+        this.name = name;
         balance = 0;
         this.accountTypes = new HashSet(Arrays.asList(accountTypes));
         this.transactionHistory = new ArrayList<>();
+    }
+    
+    public static Instant parseDate(String date){
+        return LocalDate.parse(date, DateTimeFormatter.ISO_DATE)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant();
     }
     
     private double getBalance() {
@@ -53,16 +63,26 @@ class Account{
         return Collections.unmodifiableList(transactionHistory);
     }
     
+    public List<Transaction> getTransactions(String startDate, String endDate){
+        return getTransactions(parseDate(startDate), parseDate(endDate));
+    }
+    
     public List<Transaction> getTransactions(Instant startTime, Instant endTime){
         List<Transaction> transactions = transactionHistory
                 .stream()
-                .filter(t->t.instant().isAfter(startTime)&&t.instant().isBefore(endTime))
+                .filter(t->
+                        (t.instant().isAfter(startTime)||t.instant().equals(startTime))
+                        &&(t.instant().isBefore(endTime))||t.instant().equals(endTime))
                 .collect(Collectors.toList());
         return Collections.unmodifiableList(transactions);
     }
     
     public void generate(double ammount){
         generate(ammount,Instant.now());
+    }
+    
+    public void generate(double ammount,String date){
+        generate(ammount,parseDate(date));
     }
     
     public void generate(double ammount,Instant instant){
@@ -79,6 +99,10 @@ class Account{
     
     public void transferFrom(Account incomeAccount,double ammount){
         transferFrom(incomeAccount, ammount, Instant.now());
+    }
+    
+    public void transferFrom(Account incomeAccount,double ammount, String date){
+        transferFrom(incomeAccount, ammount, parseDate(date));
     }
     
     public void transferFrom(Account incomeAccount,double ammount, Instant instant){

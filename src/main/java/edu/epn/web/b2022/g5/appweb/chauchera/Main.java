@@ -9,18 +9,18 @@ public class Main {
         Account b = new Account("Banco",Account.Type.INCOME, Account.Type.SPENDING);
         Account u = new Account("Universidad",Account.Type.SPENDING);
         
-        a.generate(1000,"2022-01-01");
-        a.generate(2000,"2023-01-01");
-        a.generate(3000,"2024-01-01");
+        a.receiveFrom(null,1000,"2022-01-01",null);
+        a.receiveFrom(null,2000,"2023-01-01",null);
+        a.receiveFrom(null,3000,"2024-01-01",null);
         
-        b.transferFrom(a, 500,"2022-03-03");
-        b.transferFrom(a, 200,"2022-03-04");
+        b.transferTo(a, 500,"2022-03-03",null);
+        b.transferTo(a, 200,"2022-03-04",null);
         
-        u.transferFrom(b, 1000,"2022-07-04");
-        u.transferFrom(b, 2000,"2022-07-08");
+        u.transferTo(b, 1000,"2022-07-04",null);
+        u.transferTo(b, 2000,"2022-07-08",null);
         
         
-        Person p = new Person(); //Placeholder for future needs
+        Person p = new Person("Pedro","Pico"); //Placeholder for future needs
         
         System.out.println(a);
         System.out.println(b);

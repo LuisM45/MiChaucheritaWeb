@@ -73,48 +73,45 @@ public class Account{
         return Collections.unmodifiableList(transactions);
     }
     
-    public void generate(double ammount){
-        generate(ammount,Instant.now());
+    public void receiveFrom(Account senderAccount, double ammount, PaymentType paymentType){
+        receiveFrom(senderAccount,ammount,Instant.now(),paymentType);
     }
     
-    public void generate(double ammount,String date){
-        generate(ammount,parseDate(date));
+    public void receiveFrom(Account senderAccount, double ammount,String date, PaymentType paymentType){
+        receiveFrom(senderAccount,ammount,parseDate(date),paymentType);
     }
     
-    public void generate(double ammount,Instant instant){
-        boolean isValidTransaction = this.isType(Type.INCOME);
-        
-        if(!isValidTransaction){
-            throw new RuntimeException("Tipo de cuenta no correcto. Solamente una cuenta de ingreso puede generar ingresos.");
-        }
-        
-        transactionHistory.add(new Transaction(ammount,instant));
-        
-        setBalance(getBalance()+ammount);
-    }
-    
-    public void transferFrom(Account incomeAccount,double ammount){
-        transferFrom(incomeAccount, ammount, Instant.now());
-    }
-    
-    public void transferFrom(Account incomeAccount,double ammount, String date){
-        transferFrom(incomeAccount, ammount, parseDate(date));
-    }
-    
-    public void transferFrom(Account incomeAccount,double ammount, Instant instant){
-        boolean isValidTransaction = this.isType(Type.SPENDING) && incomeAccount.isType(Type.INCOME);
+    public void receiveFrom(Account senderAccount, double ammount,Instant instant, PaymentType paymentType){
+        boolean isValidTransaction = this.isType(Type.SPENDING)
+                && (senderAccount.isType(Type.INCOME));
         
         if(!isValidTransaction){
             throw new RuntimeException("Tipos de cuenta no correctos. La transferencia se puede realizar desde una cuenta de ingresos a una cuenta de gastos.");
         }
         
-        transactionHistory.add(new Transaction(ammount,instant));
-        incomeAccount.transactionHistory.add(new Transaction(-ammount,instant));
+        logTransaction(this,senderAccount,new Transaction(ammount,paymentType,instant,senderAccount,this));
         
-        incomeAccount.setBalance(incomeAccount.getBalance()-ammount);
+        senderAccount.setBalance(senderAccount.getBalance()-ammount);
         setBalance(getBalance()+ammount);
     }
+    
+    public void transferTo(Account recipientAccount,double ammount, PaymentType paymentType){
+        transferTo(recipientAccount, ammount, Instant.now(),paymentType);
+    }
+    
+    public void transferTo(Account recipientAccount,double ammount, String date, PaymentType paymentType){
+        transferTo(recipientAccount, ammount, parseDate(date),paymentType);
+    }
+    
+    public void transferTo(Account recipientAccount,double ammount, Instant instant, PaymentType paymentType){
+        recipientAccount.receiveFrom(this, ammount,instant,paymentType);
+    }
 
+    private static void logTransaction(Account account1,Account account2,Transaction transaction){
+        account1.transactionHistory.add(transaction);
+        account2.transactionHistory.add(transaction);
+    }
+    
     @Override
     public String toString() {
         return "Account{" + "id=" + id + ", name=" + name + ", balance=" + balance + ", accountTypes=" + accountTypes + ", transactionHistory=" + transactionHistory + '}';

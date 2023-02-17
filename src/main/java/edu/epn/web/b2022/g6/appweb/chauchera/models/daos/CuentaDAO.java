@@ -1,5 +1,7 @@
 package edu.epn.web.b2022.g6.appweb.chauchera.models.daos;
 
-public interface CuentaDAO {
+import edu.epn.web.b2022.g6.appweb.chauchera.models.Cuenta;
+
+public interface CuentaDAO extends DAO<Cuenta, Integer>{
     
 }

@@ -5,5 +5,13 @@ import java.time.Instant;
 import java.util.Collection;
 
 public interface MovimientoDAO extends DAO<Movimiento, Integer>{
+    
+    /**
+     * Este método devuelve una Colección de movimientos filtrados por fecha/tiempo.
+     * 
+     * @param startDate Tiempo desde el cual incluir los movimientos (Inclusivo)
+     * @param endDate Tiempo hasta el cual incluir los movimientos (Inclusivo)
+     * @return 
+     */
     public Collection<Movimiento> getByDateRange(Instant startDate, Instant endDate);
 }

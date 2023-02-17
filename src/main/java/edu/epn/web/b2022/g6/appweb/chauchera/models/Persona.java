@@ -18,6 +18,18 @@ public class Persona {
     public Persona(String nombre, String apellido) {
         this(null,nombre,apellido);
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
     
     
 }

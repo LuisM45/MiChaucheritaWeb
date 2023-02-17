@@ -20,6 +20,22 @@ public class Cuenta {
     public Cuenta(String nombre, double valorTotal, TipoCuenta tipoCuenta) {
         this(null,nombre, valorTotal, tipoCuenta);
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public double getValorTotal() {
+        return valorTotal;
+    }
+
+    public TipoCuenta getTipoCuenta() {
+        return tipoCuenta;
+    }
     
     
 }

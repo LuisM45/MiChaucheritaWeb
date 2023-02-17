@@ -23,6 +23,26 @@ public class Movimiento {
     public Movimiento(Cuenta cuentaOrigen, Cuenta cuentaDestino, Instant fecha, double valor) {
         this(null,cuentaOrigen,cuentaDestino,fecha,valor);
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Cuenta getCuentaOrigen() {
+        return cuentaOrigen;
+    }
+
+    public Cuenta getCuentaDestino() {
+        return cuentaDestino;
+    }
+
+    public Instant getFecha() {
+        return fecha;
+    }
+
+    public double getValor() {
+        return valor;
+    }
     
     
 }

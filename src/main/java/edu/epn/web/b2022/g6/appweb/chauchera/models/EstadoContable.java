@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Collection;
 
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.EstadoContableDAO;
+import java.util.Collections;
 
 public class EstadoContable {
     static EstadoContableDAO dao;
@@ -27,6 +28,31 @@ public class EstadoContable {
     public EstadoContable(Instant fechaInicio, Instant fechaFin, Collection<Movimiento> movimientoPorCuenta, double ingresos, double egresos) {
         this(null,fechaInicio,fechaFin,movimientoPorCuenta,ingresos,egresos);
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Instant getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public Instant getFechaFin() {
+        return fechaFin;
+    }
+
+    public Collection<Movimiento> getMovimientoPorCuentaView() {
+        return Collections.unmodifiableCollection(movimientoPorCuenta);
+    }
+
+    public double getIngresos() {
+        return ingresos;
+    }
+
+    public double getEgresos() {
+        return egresos;
+    }
+
     
     
 }

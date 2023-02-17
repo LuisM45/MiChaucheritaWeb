@@ -16,6 +16,14 @@ public class TipoCuenta {
     public TipoCuenta(String nombre) {
         this(null,nombre);
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
     
     
 }

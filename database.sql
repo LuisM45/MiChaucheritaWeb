@@ -38,18 +38,6 @@ CREATE TABLE `statement`(
     PRIMARY KEY (`user_id`,`id`)
 );
 
-ALTER TABLE
-    `user` ADD PRIMARY KEY `user_id_primary`(`id`);
-
-ALTER TABLE
-    `account` ADD PRIMARY KEY `account_primary`(`user_id`,`id`);
-
-ALTER TABLE
-    `movement` ADD PRIMARY KEY `movement_primary`(`user_id`,`sender_id`,`recipient_id`,`id`);
-
-ALTER TABLE
-    `statement` ADD PRIMARY KEY `statement_user_id_primary`(`user_id`,`id`);
-
 ALTER TABLE `account` 
     ADD CONSTRAINT `account_fk_user`
     FOREIGN KEY (`user_id`)

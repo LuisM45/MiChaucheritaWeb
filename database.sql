@@ -13,17 +13,23 @@ CREATE TABLE `user`(
 
 CREATE TABLE `account`(
     `user_id` BIGINT NOT NULL,
-    `id` BIGINT NOT NULL,
+    `id` BIGINT AUTO_INCREMENT,
     `type_id` BIGINT NOT NULL,
     PRIMARY KEY (`user_id`,`id`)
 );
 
+CREATE TABLE `account_type`(
+    `id` BIGINT NOT NULL,
+    `name` CHAR(31) NOT NULL,
+    `descriptor` VARCHAR(255) NULL,
+    PRIMARY KEY (`id`)
+);
 
 CREATE TABLE `movement`(
-    `user_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT NOT NULL,
     `sender_id` BIGINT NULL,
     `recipient_id` BIGINT NULL,
-    `id` BIGINT NOT NULL,
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
     `concept` VARCHAR(255) NOT NULL,
     `datetime` DATETIME NOT NULL,
     `ammount` DECIMAL(8, 2) NOT NULL,
@@ -31,17 +37,23 @@ CREATE TABLE `movement`(
 );
 
 CREATE TABLE `statement`(
-    `user_id` BIGINT NOT NULL AUTO_INCREMENT,
-    `id` BIGINT NOT NULL,
+    `user_id` BIGINT NOT NULL,
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
     `start_datetime` DATETIME NOT NULL,
     `end_datetime` DATETIME NOT NULL,
     PRIMARY KEY (`user_id`,`id`)
 );
 
+
 ALTER TABLE `account` 
     ADD CONSTRAINT `account_fk_user`
     FOREIGN KEY (`user_id`)
     REFERENCES `user` (`id`);
+
+ALTER TABLE `account` 
+    ADD CONSTRAINT `account_fk_type`
+    FOREIGN KEY (`type_id`)
+    REFERENCES `account_type` (`id`);
 
 ALTER TABLE `movement`
     ADD CONSTRAINT `movement_fk_sender`

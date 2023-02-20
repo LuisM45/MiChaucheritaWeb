@@ -13,9 +13,9 @@ CREATE TABLE `user`(
 
 CREATE TABLE `account`(
     `user_id` BIGINT NOT NULL,
-    `id` BIGINT AUTO_INCREMENT,
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
     `type_id` BIGINT NOT NULL,
-    PRIMARY KEY (`user_id`,`id`)
+    PRIMARY KEY (`id`,`user_id`)
 );
 
 CREATE TABLE `account_type`(
@@ -33,7 +33,7 @@ CREATE TABLE `movement`(
     `concept` VARCHAR(255) NOT NULL,
     `datetime` DATETIME NOT NULL,
     `ammount` DECIMAL(8, 2) NOT NULL,
-    PRIMARY KEY (`user_id`,`sender_id`,`recipient_id`,`id`)
+    PRIMARY KEY (`id`,`user_id`,`sender_id`,`recipient_id`)
 );
 
 CREATE TABLE `statement`(
@@ -41,7 +41,7 @@ CREATE TABLE `statement`(
     `id` BIGINT NOT NULL AUTO_INCREMENT,
     `start_datetime` DATETIME NOT NULL,
     `end_datetime` DATETIME NOT NULL,
-    PRIMARY KEY (`user_id`,`id`)
+    PRIMARY KEY (`id`,`user_id`)
 );
 
 

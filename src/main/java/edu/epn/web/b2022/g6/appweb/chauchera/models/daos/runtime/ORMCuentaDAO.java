@@ -1,28 +1,28 @@
 package edu.epn.web.b2022.g6.appweb.chauchera.models.daos.runtime;
 
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.*;
-import edu.epn.web.b2022.g6.appweb.chauchera.models.TipoCuenta;
+import edu.epn.web.b2022.g6.appweb.chauchera.models.Cuenta;
 import java.util.Collection;
 
-public class RuntimeTipoCuentaDAO implements TipoCuentaDAO{
+public class ORMCuentaDAO implements CuentaDAO{
 
     @Override
-    public TipoCuenta create(TipoCuenta object) {
+    public Cuenta create(Cuenta object) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public TipoCuenta get(Integer key) {
+    public Cuenta get(Integer key) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public Collection<TipoCuenta> getAll() {
+    public Collection<Cuenta> getAll() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public boolean update(TipoCuenta object) {
+    public boolean update(Cuenta object) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

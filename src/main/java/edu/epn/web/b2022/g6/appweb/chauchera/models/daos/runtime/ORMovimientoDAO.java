@@ -5,7 +5,7 @@ import edu.epn.web.b2022.g6.appweb.chauchera.models.Movimiento;
 import java.time.Instant;
 import java.util.Collection;
 
-public class RuntimeMovimientoDAO implements MovimientoDAO{
+public class ORMovimientoDAO implements MovimientoDAO{
 
     @Override
     public Collection<Movimiento> getByDateRange(Instant startDate, Instant endDate) {

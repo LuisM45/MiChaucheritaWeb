@@ -4,7 +4,7 @@ import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.*;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Persona;
 import java.util.Collection;
 
-public class RuntimePersonaDAO implements PersonaDAO{
+public class ORMPersonaDAO implements PersonaDAO{
 
     @Override
     public Persona create(Persona object) {

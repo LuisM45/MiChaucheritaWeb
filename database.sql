@@ -14,6 +14,7 @@ CREATE TABLE `user`(
 CREATE TABLE `account`(
     `user_id` BIGINT NOT NULL,
     `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) NOT NULL,
     `type_id` BIGINT NOT NULL,
     PRIMARY KEY (`id`,`user_id`)
 );
@@ -27,8 +28,8 @@ CREATE TABLE `account_type`(
 
 CREATE TABLE `movement`(
     `user_id` BIGINT NOT NULL,
-    `sender_id` BIGINT NULL,
-    `recipient_id` BIGINT NULL,
+    `sender_id` BIGINT,
+    `recipient_id` BIGINT,
     `id` BIGINT NOT NULL AUTO_INCREMENT,
     `concept` VARCHAR(255) NOT NULL,
     `datetime` DATETIME NOT NULL,
@@ -44,6 +45,10 @@ CREATE TABLE `statement`(
     PRIMARY KEY (`id`,`user_id`)
 );
 
+ALTER TABLE `user` AUTO_INCREMENT=1001;
+ALTER TABLE `account` AUTO_INCREMENT=1001;
+ALTER TABLE `movement` AUTO_INCREMENT=1001;
+ALTER TABLE `statement` AUTO_INCREMENT=1001;
 
 ALTER TABLE `account` 
     ADD CONSTRAINT `account_fk_user`
@@ -56,16 +61,22 @@ ALTER TABLE `account`
     REFERENCES `account_type` (`id`);
 
 ALTER TABLE `movement`
+    ADD CONSTRAINT `movement_fk_user`
+    FOREIGN KEY (`user_id`) 
+    REFERENCES `user`(`id`);
+
+ALTER TABLE `movement`
     ADD CONSTRAINT `movement_fk_sender`
-    FOREIGN KEY (`user_id`,`sender_id`) 
-    REFERENCES `account`(`user_id`,`id`);
+    FOREIGN KEY (`sender_id`) 
+    REFERENCES `account`(`id`);
 
 ALTER TABLE `movement`
     ADD CONSTRAINT `movement_fk_recipient`
-    FOREIGN KEY (`user_id`,`recipient_id`) 
-    REFERENCES `account`(`user_id`,`id`);
+    FOREIGN KEY (`recipient_id`) 
+    REFERENCES `account`(`id`);
 
 ALTER TABLE `statement`
     ADD CONSTRAINT `statement_foreign`
     FOREIGN KEY (`user_id`)
     REFERENCES `user`(`id`);
+

@@ -52,7 +52,12 @@ public class Persona {
             throw new RuntimeException("Not implemented method");
     }
     
-    public void generarEstadi(Instant fehcaIncio, Instant fechaFin){
+    /**
+     * Genera un estado en y lo almacena en la cuenta
+     * @param fehcaIncio
+     * @param fechaFin 
+     */
+    public void generarEstado(Instant fehcaIncio, Instant fechaFin){
             throw new RuntimeException("Not implemented method");
     }
 }

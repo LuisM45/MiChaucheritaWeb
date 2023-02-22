@@ -4,7 +4,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Clase encargarda de establecer la conexión con la base de datos MySQL
+ * definida por config.ini
+ * @author luism
+ */
 public abstract class MySQLConnection {
+    
+    /**
+     * 
+     * @return Retorna una Connection del servidor MySQL definido
+     * @throws SQLException 
+     */
     public static Connection getConnection() throws SQLException{
         String host = Config.getProperty("server.db.host.address");
         String port = Config.getProperty("server.db.host.port");

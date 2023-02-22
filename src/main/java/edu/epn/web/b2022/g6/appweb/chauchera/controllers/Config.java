@@ -7,11 +7,15 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Clase responsable de cargar la configuración del archivo config.ini
+ * @author luism
+ */
 public abstract class Config {
     private final static String CONFIG_FILE = "config.ini";
     private static Properties properties;
 
-    public static void initProperties(){
+    private static void initProperties(){
         properties = new Properties();
         try(FileInputStream fis = new FileInputStream(CONFIG_FILE)){
             properties.load(fis);
@@ -23,12 +27,17 @@ public abstract class Config {
         }
             
     }
-    
-    public static Properties getProperties() {
+
+    private static Properties getProperties() {
         if(properties==null) initProperties();
         return properties;
     }
     
+    /**
+     * Retorna el valor de la propiedad 'key'
+     * @param key Nombre de la propiedad
+     * @return Valor de la propieddad
+     */
     public static String getProperty(String key) {
         return getProperties().getProperty(key);
     }

@@ -45,8 +45,6 @@ public class Cuenta {
         return Collections.unmodifiableCollection(movimientosRealizados);
     }
     
-    
-    
     public void registrarIngreso(double valor){
         throw new RuntimeException("Not implemented method");
     }
@@ -55,6 +53,12 @@ public class Cuenta {
         throw new RuntimeException("Not implemented method");
     }
     
+    /**
+     * Filtra los movimientos por fecha y cuenta y los retorna en una Collection
+     * @param fechaInicio
+     * @param fechaFin
+     * @return Movimientos dentro de un margen de tiempo de la cuenta
+     */
     public Collection<Movimiento> obtenerMovimientoPorFechas(Instant fechaInicio, Instant fechaFin){
         throw new RuntimeException("Not implemented method");
     }

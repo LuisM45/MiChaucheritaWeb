@@ -46,11 +46,13 @@ public class Cuenta {
     }
     
     public void registrarIngreso(double valor){
-        throw new RuntimeException("Not implemented method");
+
+        this.valorTotal += valor;;
     }
     
     public void registrarEgreso(double valor){
-        throw new RuntimeException("Not implemented method");
+
+        this.valorTotal -= valor;
     }
     
     /**
@@ -60,6 +62,18 @@ public class Cuenta {
      * @return Movimientos dentro de un margen de tiempo de la cuenta
      */
     public Collection<Movimiento> obtenerMovimientoPorFechas(Instant fechaInicio, Instant fechaFin){
-        throw new RuntimeException("Not implemented method");
+
+        List<Movimiento> resultado = new ArrayList<>();
+
+        for (Movimiento movimiento : movimientos) {
+            if (movimiento.getFecha().compareTo(fechaInicio) >= 0 && movimiento.getFecha().compareTo(fechaFin) <= 0)) {
+                resultado.add(movimiento);
+            }
+        }
+
+        return resultado;
+
+
+
     }
 }

@@ -45,20 +45,46 @@ public class Cuenta {
         return Collections.unmodifiableCollection(movimientosRealizados);
     }
     
+    /**
+     * Esta funcion debe ser solo realizable por cuentas tipo INGRESO.
+     * Podría lanzarse una RuntimeException.
+     * La acción se registra en movimientosRealizados.
+     * El movimiento realizado debe tener a null como su cuenta de origen
+     * @param valor 
+     */
     public void registrarIngreso(double valor){
 
         this.valorTotal += valor;;
     }
     
+    /**
+     * Esta funcion debe ser solo realizable por cuentas tipo EGRESO.
+     * Podría lanzarse una RuntimeException.
+     * La acción se registra en movimientosRealizados.
+     * El movimiento realizado debe tener a null como su cuenta de destino
+     * @param valor 
+     */
     public void registrarEgreso(double valor){
 
         this.valorTotal -= valor;
     }
     
     /**
+     * Esta funcion debe evitar valores negativos en la cuenta tipo INGRESO
+     * Podría lanzarse una RuntimeException.
+     * La acción se registra en movimientosRealizados.
+     * El movimiento realizado debe tener a esta cuenta y a la cuenta de destino
+     * @param valor
+     * @param cuentaDesinto 
+     */
+    public void transferirDinero(double valor, Cuenta cuentaDesinto){
+        throw new RuntimeException("Not implemented yet");
+    }
+    
+    /**
      * Filtra los movimientos por fecha y cuenta y los retorna en una Collection
-     * @param fechaInicio
-     * @param fechaFin
+     * @param fechaInicio inclusiva
+     * @param fechaFin inclusiva
      * @return Movimientos dentro de un margen de tiempo de la cuenta
      */
     public Collection<Movimiento> obtenerMovimientoPorFechas(Instant fechaInicio, Instant fechaFin){

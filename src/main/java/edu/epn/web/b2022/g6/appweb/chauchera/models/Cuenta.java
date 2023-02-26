@@ -48,6 +48,7 @@ public class Cuenta {
     /**
      * Esta funcion debe ser solo realizable por cuentas tipo INGRESO.
      * Podría lanzarse una RuntimeException.
+     * El valorTotal debe cambiar
      * La acción se registra en movimientosRealizados.
      * El movimiento realizado debe tener a null como su cuenta de origen
      * @param valor 
@@ -61,6 +62,7 @@ public class Cuenta {
      * Esta funcion debe ser solo realizable por cuentas tipo EGRESO.
      * Podría lanzarse una RuntimeException.
      * La acción se registra en movimientosRealizados.
+     * El valorTotal debe cambiar
      * El movimiento realizado debe tener a null como su cuenta de destino
      * @param valor 
      */
@@ -70,6 +72,7 @@ public class Cuenta {
     }
     
     /**
+     * La funcion debe ser solo realizable por cuentas tipo INGRESO e INGRESOEGRESO.
      * Esta funcion debe evitar valores negativos en la cuenta tipo INGRESO
      * Podría lanzarse una RuntimeException.
      * La acción se registra en movimientosRealizados.

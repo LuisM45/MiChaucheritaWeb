@@ -5,7 +5,10 @@ import java.util.Collection;
 
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.EstadoContableDAO;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class EstadoContable {
     static EstadoContableDAO dao;
@@ -36,12 +39,41 @@ public class EstadoContable {
     
     public EstadoContable(Persona personaDuenia, Instant fechaInicio, Instant fechaFin) {
         this(null,personaDuenia,fechaInicio,fechaFin,null,0,0);
-        throw new RuntimeException("Not implemented yet");
+        generarEstadoContable();
     }
 
     private void generarEstadoContable(){
-        throw new RuntimeException("Not implemented yet");
+        movimientoPorCuenta = new HashMap<>();
+        
+        for(Cuenta c: this.personaDuenia.getCuentasView()){
+            Collection<Movimiento> movimientos = Collections
+                    .unmodifiableCollection(c.obtenerMovimientoPorFechas(fechaInicio, fechaFin));
+            movimientoPorCuenta.put(c,movimientos);
+        }
+        setIngresos();
+        setEgresos();
     }
+    
+    private void setIngresos(){
+        ingresos = movimientoPorCuenta
+                .values()
+                .stream()
+                .flatMap(t->t.stream())
+                .filter(t->t.getCuentaOrigen()==null)
+                .mapToDouble(t->t.getValor())
+                .sum();
+    }
+    
+        private void setEgresos(){
+        ingresos = movimientoPorCuenta
+                .values()
+                .stream()
+                .flatMap(t->t.stream())
+                .filter(t->t.getCuentaDestino()==null)
+                .mapToDouble(t->t.getValor())
+                .sum();
+    }
+    
     
     public Integer getId() {
         return id;

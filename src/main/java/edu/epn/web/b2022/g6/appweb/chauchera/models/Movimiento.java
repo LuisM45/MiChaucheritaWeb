@@ -7,33 +7,36 @@ public class Movimiento {
     static MovimientoDAO dao;
 
     private final Integer id;
-    private Cuenta cuentaOrigen;
-    private Cuenta cuentaDestino;
+    private String concepto;
     private Instant fecha;
     private double valor;
+    
+    private Cuenta cuentaGeneradora;
+    private Cuenta cuentaReceptora;
 
-    public Movimiento(Integer id, Cuenta cuentaOrigen, Cuenta cuentaDestino, Instant fecha, double valor) {
+    public Movimiento(Integer id, String concepto, Cuenta cuentaOrigen, Cuenta cuentaDestino, Instant fecha, double valor) {
         this.id = id;
-        this.cuentaOrigen = cuentaOrigen;
-        this.cuentaDestino = cuentaDestino;
+        this.cuentaGeneradora = cuentaOrigen;
+        this.cuentaReceptora = cuentaDestino;
+        this.concepto = concepto;
         this.fecha = fecha;
         this.valor = valor;
     }
 
-    public Movimiento(Cuenta cuentaOrigen, Cuenta cuentaDestino, Instant fecha, double valor) {
-        this(null,cuentaOrigen,cuentaDestino,fecha,valor);
+    public Movimiento(Cuenta cuentaOrigen,String concepto, Cuenta cuentaDestino, Instant fecha, double valor) {
+        this(null,concepto,cuentaOrigen,cuentaDestino,fecha,valor);
     }
 
     public Integer getId() {
         return id;
     }
 
-    public Cuenta getCuentaOrigen() {
-        return cuentaOrigen;
+    public Cuenta getCuentaGeneradora() {
+        return cuentaGeneradora;
     }
 
-    public Cuenta getCuentaDestino() {
-        return cuentaDestino;
+    public Cuenta getCuentaReceptora() {
+        return cuentaReceptora;
     }
 
     public Instant getFecha() {
@@ -42,6 +45,10 @@ public class Movimiento {
 
     public double getValor() {
         return valor;
+    }
+
+    public String getConcepto() {
+        return concepto;
     }
     
     

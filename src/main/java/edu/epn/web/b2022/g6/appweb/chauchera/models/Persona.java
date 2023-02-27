@@ -12,6 +12,7 @@ public class Persona {
 
     private final Integer id;
     private Collection<Cuenta> cuentas;
+    private Collection<EstadoContable> estadosContables;
     private String nombre;
     private String apellido;
     

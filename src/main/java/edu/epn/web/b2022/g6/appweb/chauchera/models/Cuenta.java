@@ -11,8 +11,9 @@ public class Cuenta {
     private final Integer id;
     private String nombre;
     private double valorTotal;
-    private Collection<Movimiento> movimientosRealizados;
     private TipoCuenta tipoCuenta;
+    private Collection<Movimiento> movimientosGenerados;
+    private Collection<Movimiento> movimientosRecibidos;
 
     public Cuenta(Integer id, String nombre, double valorTotal, TipoCuenta tipoCuenta) {
         this.id = id;
@@ -41,8 +42,12 @@ public class Cuenta {
         return tipoCuenta;
     }
 
-    public Collection getMovimientosRealizadosView() {
-        return Collections.unmodifiableCollection(movimientosRealizados);
+    public Collection getMovimientosGeneradosView() {
+        return Collections.unmodifiableCollection(movimientosGenerados);
+    }
+    
+    public Collection getMovimientosRecibidosView() {
+        return Collections.unmodifiableCollection(movimientosRecibidos);
     }
     
     /**

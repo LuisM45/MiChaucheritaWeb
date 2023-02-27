@@ -14,27 +14,28 @@ public class EstadoContable {
     static EstadoContableDAO dao;
 
     private final Integer id;
-    private Persona personaDuenia;
     private Instant fechaInicio;
     private Instant fechaFin;
-    private Map<Cuenta,Collection<Movimiento>> movimientoPorCuenta;
     private double ingresos;
     private double egresos;
+    
+    private Persona personaDuenia;  
+    private Map<Cuenta,Collection<Movimiento>> movimientosRegistradosPorCuenta;
 
-    public EstadoContable(Integer id, Persona personaDuenia, Instant fechaInicio, Instant fechaFin, Map<Cuenta,Collection<Movimiento>> movimientoPorCuenta, double ingresos, double egresos) {
+    public EstadoContable(Integer id, Persona personaDuenia, Instant fechaInicio, Instant fechaFin, Map<Cuenta,Collection<Movimiento>> movimientosRegistradosPorCuenta, double ingresos, double egresos) {
         this.id = id;
         this.personaDuenia = personaDuenia;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.movimientoPorCuenta = movimientoPorCuenta;
+        this.movimientosRegistradosPorCuenta = movimientosRegistradosPorCuenta;
         this.ingresos = ingresos;
         this.egresos = egresos;
     }
 
 
 
-    public EstadoContable(Persona personaDuenia, Instant fechaInicio, Instant fechaFin, Map<Cuenta,Collection<Movimiento>> movimientoPorCuenta, double ingresos, double egresos) {
-        this(null,personaDuenia,fechaInicio,fechaFin,movimientoPorCuenta,ingresos,egresos);
+    public EstadoContable(Persona personaDuenia, Instant fechaInicio, Instant fechaFin, Map<Cuenta,Collection<Movimiento>> movimientosRegistradosPorCuenta, double ingresos, double egresos) {
+        this(null,personaDuenia,fechaInicio,fechaFin,movimientosRegistradosPorCuenta,ingresos,egresos);
     }
     
     public EstadoContable(Persona personaDuenia, Instant fechaInicio, Instant fechaFin) {
@@ -43,33 +44,33 @@ public class EstadoContable {
     }
 
     private void generarEstadoContable(){
-        movimientoPorCuenta = new HashMap<>();
+        movimientosRegistradosPorCuenta = new HashMap<>();
         
         for(Cuenta c: this.personaDuenia.getCuentasView()){
             Collection<Movimiento> movimientos = Collections
                     .unmodifiableCollection(c.obtenerMovimientoPorFechas(fechaInicio, fechaFin));
-            movimientoPorCuenta.put(c,movimientos);
+            movimientosRegistradosPorCuenta.put(c,movimientos);
         }
         setIngresos();
         setEgresos();
     }
     
     private void setIngresos(){
-        ingresos = movimientoPorCuenta
+        ingresos = movimientosRegistradosPorCuenta
                 .values()
                 .stream()
                 .flatMap(t->t.stream())
-                .filter(t->t.getCuentaOrigen()==null)
+                .filter(t->t.getCuentaGeneradora()==null)
                 .mapToDouble(t->t.getValor())
                 .sum();
     }
     
         private void setEgresos(){
-        ingresos = movimientoPorCuenta
+        ingresos = movimientosRegistradosPorCuenta  
                 .values()
                 .stream()
                 .flatMap(t->t.stream())
-                .filter(t->t.getCuentaDestino()==null)
+                .filter(t->t.getCuentaReceptora()==null)
                 .mapToDouble(t->t.getValor())
                 .sum();
     }
@@ -87,8 +88,8 @@ public class EstadoContable {
         return fechaFin;
     }
 
-    public Map<Cuenta,Collection<Movimiento>> getMovimientoPorCuentaView() {
-        return Collections.unmodifiableMap(movimientoPorCuenta);
+    public Map<Cuenta,Collection<Movimiento>> getmovimientosRegistradosPorCuentaView() {
+        return Collections.unmodifiableMap(movimientosRegistradosPorCuenta);
     }
 
     public double getIngresos() {

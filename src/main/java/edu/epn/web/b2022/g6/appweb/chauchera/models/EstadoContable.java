@@ -103,5 +103,8 @@ public class EstadoContable {
     public Persona getPersonaDuenia() {
         return personaDuenia;
     }
+
+    
+    
     
 }

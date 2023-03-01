@@ -6,7 +6,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
+//@GestionarCuentas
 public class Persona {
     static PersonaDAO dao;
 
@@ -15,8 +17,6 @@ public class Persona {
     private Collection<EstadoContable> estadosContables;
     private String nombre;
     private String apellido;
-    
-    public Persona() {}
    
     public Persona(Integer id, String nombre, String apellido) {
         this.id = id;
@@ -42,39 +42,34 @@ public class Persona {
         return apellido;
     }
 
+    //@ListarCuentas
     public Collection<Cuenta> getCuentasView() {
         return Collections.unmodifiableCollection(cuentas);
     }
     
     
-    
+    //@CrearCuenta
     public void abrirCuenta(Cuenta cuenta){
-    	int max = 0;
-		for (Cuenta cuenta: this.getCuentasView()) {
-			if(max < cuenta.getId()) {
-				max = cuenta.getId();
-			}
-		}
-		cuenta.setId(max);
-		
-		
-		cuentas.add(cuenta);
+    	cuentas.add(cuenta);
     }
     
+    //@EliminarCuenta
     public void cerrarCuenta(int id){
-            Cuenta cuenta = this.getById(id);
-            if(Cuenta != null) {
-            	cuentas.remove(cuenta);
-            }
+            cuentas.removeIf((t)->t.getId()==id);
     }
     
-    public Cuenta getById(int id) {
-		List<Cuenta> cuentas = this.getCuentasView();
-		for (Cuenta cuenta : cuentas) {
-			if(cuenta.getId() == id ) {
-				return cuenta;
-			}
-		}
-		return null;
-	}
+    //@ActualizarCuenta
+    public void actualizarCuenta(Cuenta c){
+        cuentas.stream()
+                .filter(t->Objects.equals(t.getId(), c.getId()))
+                .findFirst().orElse(null)
+                .setCuenta(c);
+    }
+    
+    //@GetCuenta. NO ES USADO
+    public Cuenta consultarCuenta(int id) {
+        return cuentas.stream()
+                .filter(t->t.getId()==id)
+                .findFirst().orElse(null);
+    }
 }

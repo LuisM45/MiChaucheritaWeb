@@ -4,7 +4,7 @@ import edu.epn.web.b2022.g6.appweb.chauchera.models.Movimiento;
 import java.time.Instant;
 import java.util.Collection;
 
-public interface MovimientoDAO extends DAO<Movimiento, Integer>{
+public interface MovimientoDAO extends GenericDAO<Movimiento, Integer>{
     
     /**
      * Este método devuelve una Colección de movimientos filtrados por fecha/tiempo.

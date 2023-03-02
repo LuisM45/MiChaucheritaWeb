@@ -1,5 +1,7 @@
 package edu.epn.web.b2022.g6.appweb.chauchera.models.daos;
 
-public interface EstadoContableDAO extends DAO<EstadoContableDAO,Integer> {
+import edu.epn.web.b2022.g6.appweb.chauchera.models.EstadoContable;
+
+public interface EstadoContableDAO extends GenericDAO<EstadoContable,Integer> {
     
 }

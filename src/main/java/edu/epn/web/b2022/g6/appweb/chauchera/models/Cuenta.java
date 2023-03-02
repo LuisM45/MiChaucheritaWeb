@@ -23,6 +23,8 @@ public class Cuenta {
         this.nombre = nombre;
         this.valorTotal = valorTotal;
         this.tipoCuenta = tipoCuenta;
+        movimientosGenerados = new ArrayList<>();
+        movimientosRecibidos = new ArrayList<>();
     }
 
     public Cuenta(String nombre, double valorTotal, TipoCuenta tipoCuenta) {
@@ -69,6 +71,8 @@ public class Cuenta {
      * @param valor 
      */
     public void registrarIngreso(double valor,  Instant fecha, String concepto){
+        if(!tipoCuenta.equals(TipoCuenta.getTipoCuenta("INGRESO")))
+                throw new RuntimeException("This action is allowed only for INGRESO accounts");
         transferirDineroGenerico(valor, null, this, fecha, concepto);
     }
     
@@ -82,6 +86,8 @@ public class Cuenta {
      * @param valor 
      */
     public void registrarEgreso(double valor,  Instant fecha, String concepto){
+        if(!tipoCuenta.equals(TipoCuenta.getTipoCuenta("EGRESO")))
+                throw new RuntimeException("This action is allowed only for INGRESO accounts");
         transferirDineroGenerico(valor, this, null, fecha, concepto);
     }
     
@@ -96,10 +102,14 @@ public class Cuenta {
      * @param cuentaDesinto 
      */
     public void transferirDinero(double valor, Cuenta cuentaDesinto, Instant fecha, String concepto){
+        if(tipoCuenta.equals(TipoCuenta.getTipoCuenta("EGRESO")))
+                throw new RuntimeException("This action is allowed only for INGRESO/INGRESOEGRESO accounts");
+        if(cuentaDesinto.equals(TipoCuenta.getTipoCuenta("INGRESO")))
+                throw new RuntimeException("This action is allowed only for EGRESO/INGRESOEGRESO accounts as destinatary");
         transferirDineroGenerico(valor, this, cuentaDesinto, fecha, concepto);
     }
     
-    public static void transferirDineroGenerico(double valor, Cuenta cuentaOrigen, Cuenta cuentaDestino, Instant fecha, String concepto){
+    private static void transferirDineroGenerico(double valor, Cuenta cuentaOrigen, Cuenta cuentaDestino, Instant fecha, String concepto){
         Movimiento mov = new Movimiento(cuentaDestino, concepto, cuentaDestino, fecha, valor);
         
         if (cuentaOrigen!=null){

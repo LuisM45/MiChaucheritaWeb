@@ -12,6 +12,7 @@ import java.util.Objects;
 public class Persona {
     static PersonaDAO dao;
 
+    private Integer estadoIdx =0;
     private final Integer id;
     private Collection<Cuenta> cuentas;
     private Collection<EstadoContable> estadosContables;
@@ -24,6 +25,7 @@ public class Persona {
         this.apellido = apellido;
         
         this.cuentas = new ArrayList<>();
+        this.estadosContables = new ArrayList<>();
     }
 
     public Persona(String nombre, String apellido) {
@@ -47,6 +49,9 @@ public class Persona {
         return Collections.unmodifiableCollection(cuentas);
     }
     
+    public Collection<EstadoContable> getEstadosContablesView() {
+        return Collections.unmodifiableCollection(estadosContables);
+    }
     
     //@CrearCuenta
     public void abrirCuenta(Cuenta cuenta){
@@ -69,6 +74,28 @@ public class Persona {
     //@GetCuenta. NO ES USADO
     public Cuenta consultarCuenta(int id) {
         return cuentas.stream()
+                .filter(t->t.getId()==id)
+                .findFirst().orElse(null);
+    }
+    
+    public EstadoContable generarEstadoContable(Instant fechaInicio, Instant fechaFin){
+        EstadoContable estadoContable = new EstadoContable(estadoIdx++,this,fechaInicio, fechaFin);
+        estadosContables.add(estadoContable);
+        return estadoContable;
+    }
+    
+    public void eliminarEstadoContable(int id){
+        estadosContables.removeIf(t->t.getId()==id);
+    }
+    
+    public EstadoContable consultarEstadoContable(int id){
+        return estadosContables.stream()
+                .filter(t->t.getId()==id)
+                .findFirst().orElse(null);
+    }
+    
+    public EstadoContable generar(int id){
+        return estadosContables.stream()
                 .filter(t->t.getId()==id)
                 .findFirst().orElse(null);
     }

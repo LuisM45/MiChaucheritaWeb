@@ -42,6 +42,11 @@ public class EstadoContable {
         this(null,personaDuenia,fechaInicio,fechaFin,null,0,0);
         generarEstadoContable();
     }
+    
+    public EstadoContable(int id, Persona personaDuenia, Instant fechaInicio, Instant fechaFin) {
+        this(id,personaDuenia,fechaInicio,fechaFin,null,0,0);
+        generarEstadoContable();
+    }
 
     private void generarEstadoContable(){
         movimientosRegistradosPorCuenta = new HashMap<>();

@@ -6,4 +6,8 @@ import java.util.Collection;
 
 public class JPACuentaDAO extends JPAGeneric<Cuenta, Integer> implements CuentaDAO{
     
+    public JPACuentaDAO() {
+        super(Cuenta.class);
+    }
+    
 }

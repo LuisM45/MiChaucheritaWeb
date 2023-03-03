@@ -8,6 +8,10 @@ import java.util.Collection;
 
 public class JPAMovimientoDAO extends JPAGeneric<Movimiento, Integer> implements MovimientoDAO{
 
+    public JPAMovimientoDAO() {
+        super(Movimiento.class);
+    }
+
     @Override
     public Collection<Movimiento> getByDateRange(Instant startDate, Instant endDate) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

@@ -5,6 +5,9 @@
 package edu.epn.web.b2022.g6.appweb.chauchera.models.daos.runtime;
 
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.GenericDAO;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.util.Collection;
 
 /**
@@ -12,30 +15,60 @@ import java.util.Collection;
  * @author luism
  */
 public class JPAGeneric<E,K> implements GenericDAO<E, K>{
+    protected EntityManager eManager;
+    protected Class<E> asociatedClass;
 
+    public JPAGeneric(Class asociatedClass) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("msql_chaucherita");
+        eManager = emf.createEntityManager();
+        this.asociatedClass = asociatedClass;
+    }
+    
+    
+    
     @Override
     public E create(E object) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        eManager.getTransaction().begin();
+        eManager.persist(object);
+        eManager.getTransaction().commit();
+        return object;
     }
 
     @Override
     public E get(K key) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return eManager.find(asociatedClass, key);
     }
 
     @Override
     public Collection<E> getAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return eManager
+                .createQuery("SELECT o FROM "+asociatedClass.getName()+" o")
+                .getResultList();
     }
 
     @Override
     public boolean update(E object) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        eManager.getTransaction().begin();
+
+        try {
+            eManager.merge(object);
+            eManager.getTransaction().commit();
+
+            return true;
+        } catch (Exception e) {
+            eManager.getTransaction().rollback();
+            return false;
+        }
     }
 
     @Override
     public boolean delete(K key) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            eManager.remove(get(key));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
     
 }

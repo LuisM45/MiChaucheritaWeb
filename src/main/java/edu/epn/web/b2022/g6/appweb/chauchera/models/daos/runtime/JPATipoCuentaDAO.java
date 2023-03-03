@@ -7,4 +7,8 @@ import java.util.Collection;
 
 public class JPATipoCuentaDAO extends JPAGeneric<TipoCuenta, Integer>implements TipoCuentaDAO{
     
+    public JPATipoCuentaDAO() {
+        super(TipoCuenta.class);
+    }
+    
 }

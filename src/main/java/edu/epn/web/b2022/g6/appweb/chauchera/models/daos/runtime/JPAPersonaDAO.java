@@ -7,4 +7,8 @@ import java.util.Collection;
 
 public class JPAPersonaDAO extends JPAGeneric<Persona, Integer> implements PersonaDAO{
     
+    public JPAPersonaDAO() {
+        super(Persona.class);
+    }
+    
 }

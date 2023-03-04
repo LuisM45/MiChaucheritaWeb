@@ -6,7 +6,6 @@ USE `mi_chaucherita`;
 CREATE TABLE `user`(
     `id` BIGINT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
-    `lastname` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -20,21 +19,19 @@ CREATE TABLE `account`(
 );
 
 CREATE TABLE `account_type`(
-    `id` BIGINT NOT NULL,
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
     `name` CHAR(31) NOT NULL,
-    `descriptor` VARCHAR(255) NULL,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `movement`(
-    `user_id` BIGINT NOT NULL,
     `sender_id` BIGINT,
     `recipient_id` BIGINT,
     `id` BIGINT NOT NULL AUTO_INCREMENT,
     `concept` VARCHAR(255) NOT NULL,
     `datetime` DATETIME NOT NULL,
     `ammount` DECIMAL(8, 2) NOT NULL,
-    PRIMARY KEY (`id`,`user_id`,`sender_id`,`recipient_id`)
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `statement`(
@@ -60,10 +57,6 @@ ALTER TABLE `account`
     FOREIGN KEY (`type_id`)
     REFERENCES `account_type` (`id`);
 
-ALTER TABLE `movement`
-    ADD CONSTRAINT `movement_fk_user`
-    FOREIGN KEY (`user_id`) 
-    REFERENCES `user`(`id`);
 
 ALTER TABLE `movement`
     ADD CONSTRAINT `movement_fk_sender`

@@ -1,5 +1,6 @@
 package edu.epn.web.b2022.g6.appweb.chauchera.models;
 
+import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.DaoFactory;
 import java.time.Instant;
 import java.util.Collection;
 
@@ -88,11 +89,9 @@ public class EstadoContable {
     
     
     public void setEstadoContable(){
-        System.out.println("edu.epn.web.b2022.g6.appweb.chauchera.models.EstadoContable.setEstadoContable():TEST");
         if(personaDuenia==null||
                 fechaFin==null||
                 fechaInicio==null) return;
-        System.out.println("edu.epn.web.b2022.g6.appweb.chauchera.models.EstadoContable.setEstadoContable():IN");
         
         movimientosRegistradosPorCuenta = new HashMap<>();
         for(Cuenta c: this.personaDuenia.getCuentasView()){
@@ -100,8 +99,11 @@ public class EstadoContable {
                     .unmodifiableCollection(c.obtenerMovimientoPorFechas(fechaInicio, fechaFin));
             movimientosRegistradosPorCuenta.put(c,movimientos);
         }
-        setIngresos();
-        setEgresos();
+        setEgresosPorCuenta();
+        setIngresosPorCuenta();
+        setEgresosTotales();
+        setIngresosTotales();
+    
     }
 
     private void setIngresosPorCuenta(){
@@ -133,23 +135,21 @@ public class EstadoContable {
     }
     
     private void setIngresosTotales(){
-        ingresosTotales = ingresosPorCuenta.values().stream().mapToDouble(t->t).sum();
+        TipoCuenta ingresoType = DaoFactory.getDaoFactory().getTipoCuentaDAO().getByName("INGRESO");
+        ingresosTotales = egresosPorCuenta.entrySet().stream()
+                .filter(t->t.getKey().getTipoCuenta().equals(ingresoType))
+                .mapToDouble(t->t.getValue())
+                .sum();
     }
     
     
     
     private void setEgresosTotales(){
-        egresosTotales = egresosPorCuenta.values().stream().mapToDouble(t->t).sum();
-    }
-    
-    private void setIngresos(){
-        setIngresosPorCuenta();
-        setIngresosTotales();
-    }
-    
-    private void setEgresos(){
-        setEgresosPorCuenta();
-        setEgresosTotales();
+        TipoCuenta egresoType = DaoFactory.getDaoFactory().getTipoCuentaDAO().getByName("EGRESO");
+        egresosTotales = ingresosPorCuenta.entrySet().stream()
+                .filter(t->t.getKey().getTipoCuenta().equals(egresoType))
+                .mapToDouble(t->t.getValue())
+                .sum();
     }
     
     

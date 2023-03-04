@@ -4,21 +4,25 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Mis cuentas</title>
     </head>
     <body>
-        <h1>Seleccione la cuenta a eliminar ${user.nombre}</h1>
+        <h1>Bienvenido ${user.nombre}</h1>
         <a href="?action=create">Crear cuenta</a>
-        <a href="?action=create">Elimnar cuentas</a>
+        <a href="?action=delete">Elimnar cuentas</a>
         <table>
             <tr>
                 <th>Nombre</th>
-                <th>Accion</th>
+                <th>Balance</th>
+                <th>Acciones</th>
             </tr>
-            <c:forEach items="${cuentas}" var="cuenta">
+            <c:forEach items="${user.cuentasView}" var="cuenta">
                 <tr>
                     <td>${cuenta.nombre}</td>
-                    <td><a href="?action=delete&id=${cuenta.id}">❌</a></td>
+                    <td>${cuenta.valorTotal}</td>
+                    <td>
+                        <a href="?action=update&id=${cuenta.id}">Actualizar</a>
+                    </td>
                 </tr>
             </c:forEach>
         </table>

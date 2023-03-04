@@ -9,6 +9,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.Collection;
+import java.util.List;
+import javax.persistence.EntityTransaction;
 
 /**
  *
@@ -28,9 +30,10 @@ public class JPAGeneric<E,K> implements GenericDAO<E, K>{
     
     @Override
     public E create(E object) {
-        eManager.getTransaction().begin();
+        EntityTransaction transaction = eManager.getTransaction();
+        transaction.begin();
         eManager.persist(object);
-        eManager.getTransaction().commit();
+        transaction.commit();
         return object;
     }
 
@@ -48,15 +51,16 @@ public class JPAGeneric<E,K> implements GenericDAO<E, K>{
 
     @Override
     public boolean update(E object) {
-        eManager.getTransaction().begin();
+        EntityTransaction transaction = eManager.getTransaction();
+        transaction.begin();
 
         try {
             eManager.merge(object);
-            eManager.getTransaction().commit();
+            transaction.commit();
 
             return true;
         } catch (Exception e) {
-            eManager.getTransaction().rollback();
+            transaction.rollback();
             return false;
         }
     }

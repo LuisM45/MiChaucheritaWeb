@@ -7,17 +7,53 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
+@Entity
+@Table(name="account")
 public class Cuenta {
-    static CuentaDAO dao;
 
-    private final Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    
+    @Column(name = "name")
     private String nombre;
+    
+    @Transient
     private double valorTotal;
+    
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "type_id")
     private TipoCuenta tipoCuenta;
+    
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private Persona duenio;
+    
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "sender_id")
     private Collection<Movimiento> movimientosGenerados;
+    
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "recipient_id")
     private Collection<Movimiento> movimientosRecibidos;
 
+    public Cuenta() {
+        valorTotal = 0;
+    }
+    
     public Cuenta(Integer id, String nombre, double valorTotal, TipoCuenta tipoCuenta) {
         this.id = id;
         this.nombre = nombre;
@@ -30,6 +66,41 @@ public class Cuenta {
     public Cuenta(String nombre, double valorTotal, TipoCuenta tipoCuenta) {
         this(null,nombre, valorTotal, tipoCuenta);
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setValorTotal() {
+        if(movimientosGenerados==null||movimientosRecibidos==null) return;
+        valorTotal = 0;
+        valorTotal -= movimientosGenerados.stream()
+                .mapToDouble(t->t.getValor())
+                .sum();
+        valorTotal += movimientosRecibidos.stream()
+                .mapToDouble(t->t.getValor())
+                .sum();
+    }
+
+    public void setTipoCuenta(TipoCuenta tipoCuenta) {
+        this.tipoCuenta = tipoCuenta;
+    }
+
+    public void setMovimientosGenerados(Collection<Movimiento> movimientosGenerados) {
+        this.movimientosGenerados = movimientosGenerados;
+        setValorTotal();
+    }
+
+    public void setMovimientosRecibidos(Collection<Movimiento> movimientosRecibidos) {
+        this.movimientosRecibidos = movimientosRecibidos;
+        setValorTotal();
+    }
+    
+    
     
     public void setCuenta(Cuenta c){
         this.nombre = c.nombre;
@@ -37,6 +108,16 @@ public class Cuenta {
         this.valorTotal = c.valorTotal;
     }
 
+    public Persona getDuenio() {
+        return duenio;
+    }
+
+    public void setDuenio(Persona duenio) {
+        this.duenio = duenio;
+    }
+
+    
+    
     public Integer getId() {
         return id;
     }
@@ -71,7 +152,7 @@ public class Cuenta {
      * @param valor 
      */
     public void registrarIngreso(double valor,  Instant fecha, String concepto){
-        if(!tipoCuenta.equals(TipoCuenta.getTipoCuenta("INGRESO")))
+        if(!tipoCuenta.getNombre().equals("INGRESO"))
                 throw new RuntimeException("This action is allowed only for INGRESO accounts");
         transferirDineroGenerico(valor, null, this, fecha, concepto);
     }
@@ -86,8 +167,8 @@ public class Cuenta {
      * @param valor 
      */
     public void registrarEgreso(double valor,  Instant fecha, String concepto){
-        if(!tipoCuenta.equals(TipoCuenta.getTipoCuenta("EGRESO")))
-                throw new RuntimeException("This action is allowed only for INGRESO accounts");
+        if(!tipoCuenta.getNombre().equals("EGRESO"))
+                throw new RuntimeException("This action is allowed only for EGRESO accounts");
         transferirDineroGenerico(valor, this, null, fecha, concepto);
     }
     
@@ -102,15 +183,15 @@ public class Cuenta {
      * @param cuentaDesinto 
      */
     public void transferirDinero(double valor, Cuenta cuentaDesinto, Instant fecha, String concepto){
-        if(tipoCuenta.equals(TipoCuenta.getTipoCuenta("EGRESO")))
+        if(tipoCuenta.getNombre().equals("EGRESO"))
                 throw new RuntimeException("This action is allowed only for INGRESO/INGRESOEGRESO accounts");
-        if(cuentaDesinto.equals(TipoCuenta.getTipoCuenta("INGRESO")))
+        if(cuentaDesinto.tipoCuenta.getNombre().equals("INGRESO"))
                 throw new RuntimeException("This action is allowed only for EGRESO/INGRESOEGRESO accounts as destinatary");
         transferirDineroGenerico(valor, this, cuentaDesinto, fecha, concepto);
     }
     
     private static void transferirDineroGenerico(double valor, Cuenta cuentaOrigen, Cuenta cuentaDestino, Instant fecha, String concepto){
-        Movimiento mov = new Movimiento(cuentaDestino, concepto, cuentaDestino, fecha, valor);
+        Movimiento mov = new Movimiento(cuentaOrigen, concepto, cuentaDestino, fecha, valor);
         
         if (cuentaOrigen!=null){
             cuentaOrigen.valorTotal-=valor;

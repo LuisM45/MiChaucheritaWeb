@@ -4,32 +4,70 @@ import java.time.Instant;
 import java.util.Collection;
 
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.EstadoContableDAO;
+import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.runtime.JPAInstantAttributeConverter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
+@Entity
+@Table(name="statement")
 public class EstadoContable {
-    static EstadoContableDAO dao;
 
-    private final Integer id;
-    private Instant fechaInicio;
-    private Instant fechaFin;
-    private double ingresos;
-    private double egresos;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     
-    private Persona personaDuenia;  
+    @Column(name = "start_datetime")
+    @Convert(converter = JPAInstantAttributeConverter.class)
+    private Instant fechaInicio;
+    
+    @Column(name = "end_datetime")
+    @Convert(converter = JPAInstantAttributeConverter.class)
+    private Instant fechaFin;
+    
+    @Transient
+    private double ingresosTotales;
+    
+    @Transient
+    private Map<Cuenta,Double> ingresosPorCuenta;
+    
+    @Transient
+    private Map<Cuenta,Double> egresosPorCuenta;
+    
+    @Transient
+    private double egresosTotales;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Persona personaDuenia;
+    
+    @Transient
     private Map<Cuenta,Collection<Movimiento>> movimientosRegistradosPorCuenta;
 
+    public EstadoContable() {
+        movimientosRegistradosPorCuenta = new HashMap<>();
+    }
+    
     public EstadoContable(Integer id, Persona personaDuenia, Instant fechaInicio, Instant fechaFin, Map<Cuenta,Collection<Movimiento>> movimientosRegistradosPorCuenta, double ingresos, double egresos) {
         this.id = id;
         this.personaDuenia = personaDuenia;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.movimientosRegistradosPorCuenta = movimientosRegistradosPorCuenta;
-        this.ingresos = ingresos;
-        this.egresos = egresos;
+        this.ingresosTotales = ingresos;
+        this.egresosTotales = egresos;
     }
 
 
@@ -40,17 +78,23 @@ public class EstadoContable {
     
     public EstadoContable(Persona personaDuenia, Instant fechaInicio, Instant fechaFin) {
         this(null,personaDuenia,fechaInicio,fechaFin,null,0,0);
-        generarEstadoContable();
+        setEstadoContable();
     }
     
     public EstadoContable(int id, Persona personaDuenia, Instant fechaInicio, Instant fechaFin) {
         this(id,personaDuenia,fechaInicio,fechaFin,null,0,0);
-        generarEstadoContable();
+        setEstadoContable();
     }
-
-    private void generarEstadoContable(){
-        movimientosRegistradosPorCuenta = new HashMap<>();
+    
+    
+    public void setEstadoContable(){
+        System.out.println("edu.epn.web.b2022.g6.appweb.chauchera.models.EstadoContable.setEstadoContable():TEST");
+        if(personaDuenia==null||
+                fechaFin==null||
+                fechaInicio==null) return;
+        System.out.println("edu.epn.web.b2022.g6.appweb.chauchera.models.EstadoContable.setEstadoContable():IN");
         
+        movimientosRegistradosPorCuenta = new HashMap<>();
         for(Cuenta c: this.personaDuenia.getCuentasView()){
             Collection<Movimiento> movimientos = Collections
                     .unmodifiableCollection(c.obtenerMovimientoPorFechas(fechaInicio, fechaFin));
@@ -59,25 +103,53 @@ public class EstadoContable {
         setIngresos();
         setEgresos();
     }
-    
-    private void setIngresos(){
-        ingresos = movimientosRegistradosPorCuenta
-                .values()
-                .stream()
-                .flatMap(t->t.stream())
-                .filter(t->t.getCuentaGeneradora()==null)
+
+    private void setIngresosPorCuenta(){
+        ingresosPorCuenta = new HashMap<>();
+        for(var v: movimientosRegistradosPorCuenta.entrySet()){
+            Cuenta cuenta = v.getKey();
+            Collection<Movimiento> movimientos = v.getValue();
+            ingresosPorCuenta.put(v.getKey(),
+                movimientos.stream()
+                .filter(t->t.getCuentaReceptora()==cuenta)
                 .mapToDouble(t->t.getValor())
-                .sum();
+                .sum());
+        }
     }
     
-        private void setEgresos(){
-        ingresos = movimientosRegistradosPorCuenta  
-                .values()
-                .stream()
-                .flatMap(t->t.stream())
-                .filter(t->t.getCuentaReceptora()==null)
+    
+    
+    private void setEgresosPorCuenta(){
+        egresosPorCuenta = new HashMap<>();
+        for(var v: movimientosRegistradosPorCuenta.entrySet()){
+            Cuenta cuenta = v.getKey();
+            Collection<Movimiento> movimientos = v.getValue();
+            egresosPorCuenta.put(v.getKey(),
+                movimientos.stream()
+                .filter(t->t.getCuentaGeneradora()==cuenta)
                 .mapToDouble(t->t.getValor())
-                .sum();
+                .sum());
+        }
+    }
+    
+    private void setIngresosTotales(){
+        ingresosTotales = ingresosPorCuenta.values().stream().mapToDouble(t->t).sum();
+    }
+    
+    
+    
+    private void setEgresosTotales(){
+        egresosTotales = egresosPorCuenta.values().stream().mapToDouble(t->t).sum();
+    }
+    
+    private void setIngresos(){
+        setIngresosPorCuenta();
+        setIngresosTotales();
+    }
+    
+    private void setEgresos(){
+        setEgresosPorCuenta();
+        setEgresosTotales();
     }
     
     
@@ -96,17 +168,50 @@ public class EstadoContable {
     public Map<Cuenta,Collection<Movimiento>> getmovimientosRegistradosPorCuentaView() {
         return Collections.unmodifiableMap(movimientosRegistradosPorCuenta);
     }
-
-    public double getIngresos() {
-        return ingresos;
+    
+    public Map<Cuenta,Double> getIngresosPorCuentaView() {
+        return Collections.unmodifiableMap(ingresosPorCuenta);
+    }
+    
+    public Map<Cuenta,Double> getEgresosPorCuentaView() {
+        return Collections.unmodifiableMap(egresosPorCuenta);
     }
 
-    public double getEgresos() {
-        return egresos;
+    public double getIngresosTotales() {
+        return ingresosTotales;
+    }
+
+    public double getEgresosTotales() {
+        return egresosTotales;
     }
 
     public Persona getPersonaDuenia() {
         return personaDuenia;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setFechaInicio(Instant fechaInicio) {
+        this.fechaInicio = fechaInicio;
+        setEstadoContable();
+    }
+
+    public void setFechaFin(Instant fechaFin) {
+        this.fechaFin = fechaFin;
+        setEstadoContable();
+    }
+
+    public void setPersonaDuenia(Persona personaDuenia) {
+        this.personaDuenia = personaDuenia;
+        setEstadoContable();
+    }
+
+    @Override
+    public String toString() {
+        return "EstadoContable{" + "id=" + id + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + ", ingresos=" + ingresosTotales + ", egresos=" + egresosTotales + ", personaDuenia=" + personaDuenia.getNombre() + '}';
+    }
+    
     
 }

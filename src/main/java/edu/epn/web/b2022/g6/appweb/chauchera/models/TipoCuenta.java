@@ -1,23 +1,29 @@
 package edu.epn.web.b2022.g6.appweb.chauchera.models;
 
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.TipoCuentaDAO;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
+
+@Entity
+@Table(name="account_type")
 public class TipoCuenta {
-    static TipoCuentaDAO dao;
-
-    private static final Collection<TipoCuenta> tiposCuenta;
-    static{
-        tiposCuenta = new ArrayList<>();
-        tiposCuenta.add(new TipoCuenta(1,"INGRESO"));
-        tiposCuenta.add(new TipoCuenta(2,"EGRESO"));
-        tiposCuenta.add(new TipoCuenta(3,"INGRESO_EGRESO"));
-    }
     
-    private final Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @Column(name="name")
     private String nombre;
 
+    public TipoCuenta() {
+    }
+    
     public TipoCuenta(Integer id, String nombre) {
         this.id = id;
         this.nombre = nombre;
@@ -27,6 +33,16 @@ public class TipoCuenta {
         this(null,nombre);
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    
+    
     public Integer getId() {
         return id;
     }
@@ -34,8 +50,11 @@ public class TipoCuenta {
     public String getNombre() {
         return nombre;
     }
-    
-    public static TipoCuenta getTipoCuenta(String nombre){
-        return tiposCuenta.stream().filter(t->t.nombre.equals(nombre)).findAny().orElse(null);
+
+    @Override
+    public String toString() {
+        return nombre;
     }
+    
+    
 }

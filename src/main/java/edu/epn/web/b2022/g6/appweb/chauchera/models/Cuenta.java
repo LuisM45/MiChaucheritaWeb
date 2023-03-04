@@ -54,17 +54,17 @@ public class Cuenta {
         valorTotal = 0;
     }
     
-    public Cuenta(Integer id, String nombre, double valorTotal, TipoCuenta tipoCuenta) {
+    public Cuenta(Integer id, String nombre, TipoCuenta tipoCuenta) {
         this.id = id;
         this.nombre = nombre;
-        this.valorTotal = valorTotal;
+        this.valorTotal = 0;
         this.tipoCuenta = tipoCuenta;
         movimientosGenerados = new ArrayList<>();
         movimientosRecibidos = new ArrayList<>();
     }
 
-    public Cuenta(String nombre, double valorTotal, TipoCuenta tipoCuenta) {
-        this(null,nombre, valorTotal, tipoCuenta);
+    public Cuenta(String nombre, TipoCuenta tipoCuenta) {
+        this(null,nombre, tipoCuenta);
     }
 
     public void setId(Integer id) {
@@ -151,10 +151,12 @@ public class Cuenta {
      * El movimiento realizado debe tener a null como su cuenta de origen
      * @param valor 
      */
-    public void registrarIngreso(double valor,  Instant fecha, String concepto){
+    public void registrarIngreso(double valor, Cuenta cuentaDesinto,  Instant fecha, String concepto){
         if(!tipoCuenta.getNombre().equals("INGRESO"))
-                throw new RuntimeException("This action is allowed only for INGRESO accounts");
-        transferirDineroGenerico(valor, null, this, fecha, concepto);
+                throw new RuntimeException("This action be performed onyl by INGRESO accounts");
+        if(cuentaDesinto.getTipoCuenta().getNombre().equals("INGRESO"))
+                throw new RuntimeException("An INGRESO account cannot be the target for this action");
+        transferirDineroGenerico(valor, this, cuentaDesinto, fecha, concepto);
     }
     
     /**
@@ -166,10 +168,12 @@ public class Cuenta {
      * El movimiento realizado debe tener a null como su cuenta de destino
      * @param valor 
      */
-    public void registrarEgreso(double valor,  Instant fecha, String concepto){
+    public void registrarEgreso(double valor, Cuenta cuentaOrigen,  Instant fecha, String concepto){
         if(!tipoCuenta.getNombre().equals("EGRESO"))
-                throw new RuntimeException("This action is allowed only for EGRESO accounts");
-        transferirDineroGenerico(valor, this, null, fecha, concepto);
+            throw new RuntimeException("This action be performed onyl by EGRESO accounts");
+        if(cuentaOrigen.getTipoCuenta().getNombre().equals("EGRESO"))
+            throw new RuntimeException("An EGRESO account cannot be the origin for this action");
+        transferirDineroGenerico(valor, cuentaOrigen, this, fecha, concepto);
     }
     
     /**
@@ -183,10 +187,10 @@ public class Cuenta {
      * @param cuentaDesinto 
      */
     public void transferirDinero(double valor, Cuenta cuentaDesinto, Instant fecha, String concepto){
-        if(tipoCuenta.getNombre().equals("EGRESO"))
-                throw new RuntimeException("This action is allowed only for INGRESO/INGRESOEGRESO accounts");
-        if(cuentaDesinto.tipoCuenta.getNombre().equals("INGRESO"))
-                throw new RuntimeException("This action is allowed only for EGRESO/INGRESOEGRESO accounts as destinatary");
+        if(!tipoCuenta.getNombre().equals("INGRESO_EGRESO"))
+                throw new RuntimeException("This action is allowed only for INGRESOEGRESO accounts");
+        if(!cuentaDesinto.getTipoCuenta().getNombre().equals("INGRESO_EGRESO"))
+                throw new RuntimeException("Only INGRESOEGRESO account can be the target for this action");
         transferirDineroGenerico(valor, this, cuentaDesinto, fecha, concepto);
     }
     
@@ -225,4 +229,11 @@ public class Cuenta {
         
         return response;
     }
+
+    @Override
+    public String toString() {
+        return "Cuenta{" + "id=" + id + ", nombre=" + nombre + '}';
+    }
+    
+    
 }

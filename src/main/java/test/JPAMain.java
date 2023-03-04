@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package test;
 
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Cuenta;
@@ -15,12 +11,7 @@ import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.runtime.JPACuentaDAO;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.runtime.JPAPersonaDAO;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.runtime.JPATipoCuentaDAO;
 import java.time.Instant;
-import java.util.Collection;
 
-/**
- *
- * @author luism
- */
 public class JPAMain {
     private static TipoCuentaDAO tipoCuentaDAO = new JPATipoCuentaDAO();
     private static PersonaDAO personaDAO = new JPAPersonaDAO();
@@ -59,13 +50,15 @@ public class JPAMain {
     }
     
     public static void initCuentas(){
-        Cuenta c1 = new Cuenta("Nomina", 0, tipoCuentaDAO.getByName("INGRESO"));
-        Cuenta c2 = new Cuenta("Banco", 0, tipoCuentaDAO.getByName("INGRESO_EGRESO"));
-        Cuenta c3 = new Cuenta("Universidad", 0, tipoCuentaDAO.getByName("EGRESO"));
+        Cuenta c1 = new Cuenta("Nomina", tipoCuentaDAO.getByName("INGRESO"));
+        Cuenta c2 = new Cuenta("Banco_P", tipoCuentaDAO.getByName("INGRESO_EGRESO"));
+        Cuenta c3 = new Cuenta("Banco_B", tipoCuentaDAO.getByName("INGRESO_EGRESO"));
+        Cuenta c4 = new Cuenta("Universidad", tipoCuentaDAO.getByName("EGRESO"));
         Persona p1 = personaDAO.get(1001);
         p1.abrirCuenta(c1);
         p1.abrirCuenta(c2);
         p1.abrirCuenta(c3);
+        p1.abrirCuenta(c4);
         cuentaDAO.update(c1);
 //        cuentaDAO.update(c2);
 //        cuentaDAO.update(c3);
@@ -82,20 +75,21 @@ public class JPAMain {
     public static void initMovimientos(){
         Persona p =  personaDAO.get(1001);
         
-        Cuenta nomina = p.consultarCuenta(1003);
-        Cuenta banco = p.consultarCuenta(1001);
-        Cuenta universidad = p.consultarCuenta(1002);
+        Cuenta nomina = p.consultarCuenta(1004);
+        Cuenta banco1 = p.consultarCuenta(1002);
+        Cuenta banco2 = p.consultarCuenta(1003);
+        Cuenta universidad = p.consultarCuenta(1001);
         
         System.out.println(nomina.getTipoCuenta());
-        System.out.println(banco.getTipoCuenta());
+        System.out.println(banco1.getTipoCuenta());
         System.out.println(universidad.getTipoCuenta());
         
-        nomina.registrarIngreso(1000, Instant.parse("2020-01-01T20:00:00Z"),"Nomina enero" );
-        nomina.registrarIngreso(1000, Instant.parse("2020-01-02T20:00:00Z"),"Nomina enero" );
-        nomina.registrarIngreso(1000, Instant.parse("2020-01-03T20:00:00Z"),"Nomina enero" );
-        banco.transferirDinero(1000, banco, Instant.parse("2020-01-04T20:00:00Z"), "Sample movement");
-        banco.transferirDinero(500, universidad, Instant.parse("2020-01-05T20:00:00Z"), "Pagos diversos de matriculas");
-        universidad.registrarEgreso(250, Instant.parse("2020-01-06T20:00:00Z"), "Pagos diversos de matriculas");
+        nomina.registrarIngreso(1000,banco1, Instant.parse("2020-01-01T20:00:00Z"),"Nomina enero1" );
+        nomina.registrarIngreso(1000,banco1, Instant.parse("2020-01-02T20:00:00Z"),"Nomina enero2" );
+        nomina.registrarIngreso(1000,banco1, Instant.parse("2020-01-03T20:00:00Z"),"Nomina enero3" );
+        banco1.transferirDinero(1000, banco2, Instant.parse("2020-01-04T20:00:00Z"), "Sample movement");
+        banco1.transferirDinero(500, banco2, Instant.parse("2020-01-05T20:00:00Z"), "Sample movement 2");
+        universidad.registrarEgreso(250,banco2, Instant.parse("2020-01-06T20:00:00Z"), "Pagos diversos de matriculas");
         
         personaDAO.update(p);
     }
@@ -118,8 +112,12 @@ public class JPAMain {
         p.getEstadosContablesView().forEach(t->t.setEstadoContable());
         System.out.println(p.getEstadosContablesView().stream().findAny().get().getmovimientosRegistradosPorCuentaView());
         
-        for(var v: p.getEstadosContablesView())
+        for(var v: p.getEstadosContablesView()){
             System.out.println(v.toString());
+            System.out.println(v.getIngresosPorCuentaView());
+            System.out.println(v.getEgresosPorCuentaView());
+        }
+            
     }
     
     
@@ -134,6 +132,6 @@ public class JPAMain {
 //           checkCuentas();
 //            initMovimientos();
 //            initEstatutos();
-            checkEstatutos();
+//            checkEstatutos();
     }
 }

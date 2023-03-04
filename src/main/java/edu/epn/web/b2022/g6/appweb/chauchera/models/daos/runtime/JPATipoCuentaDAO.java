@@ -10,5 +10,15 @@ public class JPATipoCuentaDAO extends JPAGeneric<TipoCuenta, Integer>implements 
     public JPATipoCuentaDAO() {
         super(TipoCuenta.class);
     }
+
+    @Override
+    public TipoCuenta getByName(String name) {
+        String jpql = "SELECT t FROM TipoCuenta t WHERE t.nombre=:name";
+        return (TipoCuenta) eManager.createQuery(jpql)
+                .setParameter("name", name)
+                .getResultStream()
+                .findAny()
+                .orElse(null);
+    }
     
 }

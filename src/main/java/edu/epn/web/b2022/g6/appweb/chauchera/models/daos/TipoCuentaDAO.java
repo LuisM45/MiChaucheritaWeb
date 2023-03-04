@@ -3,5 +3,5 @@ package edu.epn.web.b2022.g6.appweb.chauchera.models.daos;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.TipoCuenta;
 
 public interface TipoCuentaDAO extends GenericDAO<TipoCuenta, Integer>{
-    
+    public TipoCuenta getByName(String name);
 }

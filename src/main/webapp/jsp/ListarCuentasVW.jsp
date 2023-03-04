@@ -4,6 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="https://raw.githubusercontent.com/LuisM45/MiChaucheritaWeb/heressy/styles.css">
         <title>Mis cuentas</title>
     </head>
     <body>

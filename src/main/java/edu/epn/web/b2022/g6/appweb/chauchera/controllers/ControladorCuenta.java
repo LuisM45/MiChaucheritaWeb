@@ -126,10 +126,9 @@ public class ControladorCuenta extends HttpServlet {
         
         Persona user =  getUser(request, response);
         Cuenta cuenta = user.consultarCuenta(id);
-        user.cerrarCuenta(id);
         
-//        DaoFactory.getDaoFactory().getCuentaDA    O().delete(id);
-        DaoFactory.getDaoFactory().getPersonaDAO().update(user);
+        DaoFactory.getDaoFactory().getCuentaDAO().delete(id);
+        user.cerrarCuenta(id);
         response.sendRedirect("cuentas");
     }
     

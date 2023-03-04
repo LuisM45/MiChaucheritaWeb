@@ -96,7 +96,9 @@ public class Persona {
     
     //@EliminarCuenta
     public void cerrarCuenta(int id){
-            cuentas.removeIf((t)->t.getId()==id);
+        Cuenta porBorrar = cuentas.stream().filter(t->t.getId()==id).findFirst().orElse(null);
+        porBorrar.setDuenio(null);
+        cuentas.remove(porBorrar);
     }
     
     //@ActualizarCuenta

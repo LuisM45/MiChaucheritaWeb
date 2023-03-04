@@ -16,7 +16,9 @@
             <tr>
                 <th>Nombre</th>
                 <th>Balance</th>
-                <th>Acciones</th>
+                <th>Actualizar</th>
+                <th>Accion</th>
+                <th>VerEstadoContable</th>
             </tr>
             <c:forEach items="${user.cuentasView}" var="cuenta">
                 <tr>
@@ -24,6 +26,20 @@
                     <td>${cuenta.valorTotal}</td>
                     <td>
                         <a href="?action=update&id=${cuenta.id}">Actualizar</a>
+                    </td>
+                    <td>
+                        <c:if test="${cuenta.tipoCuenta.nombre == 'INGRESO'}">
+                            <a href="pagos?action=earning&id_source=${cuenta.id}">Registrar ingreso</a>
+                        </c:if>
+                        <c:if test="${cuenta.tipoCuenta.nombre == 'INGRESO_EGRESO'}">
+                            <a href="pagos?action=transfer&id_source=${cuenta.id}">Transferir valor</a>
+                        </c:if>
+                        <c:if test="${cuenta.tipoCuenta.nombre == 'EGRESO'}">
+                            <a href="pagos?action=spending&id_source=${cuenta.id}">Registrar egreso</a>
+                        </c:if>
+                    </td>
+                    <td>
+                        <a href="">👁</a>
                     </td>
                 </tr>
             </c:forEach>

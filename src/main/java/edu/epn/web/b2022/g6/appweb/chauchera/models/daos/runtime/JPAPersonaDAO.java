@@ -10,5 +10,14 @@ public class JPAPersonaDAO extends JPAGeneric<Persona, Integer> implements Perso
     public JPAPersonaDAO() {
         super(Persona.class);
     }
+
+    @Override
+    public Persona getByCredentials(String username, String password) {
+        String jpql = "SELECT p FROM Persona p WHERE p.nombre=:username";
+        return (Persona) eManager.createQuery(jpql)
+                .setParameter("username", username)
+                .getResultList().stream()
+                .findAny().orElse(null);
+    }
     
 }

@@ -32,11 +32,11 @@ public class Movimiento {
     @Column(name = "ammount")
     private double valor;
     
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "sender_id", nullable = true)
     private Cuenta cuentaGeneradora;
     
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "recipient_id", nullable = true)
     private Cuenta cuentaReceptora;
 

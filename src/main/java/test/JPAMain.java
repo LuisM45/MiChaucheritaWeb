@@ -75,10 +75,10 @@ public class JPAMain {
     public static void initMovimientos(){
         Persona p =  personaDAO.get(1001);
         
-        Cuenta nomina = p.consultarCuenta(1004);
+        Cuenta nomina = p.consultarCuenta(1001);
         Cuenta banco1 = p.consultarCuenta(1002);
         Cuenta banco2 = p.consultarCuenta(1003);
-        Cuenta universidad = p.consultarCuenta(1001);
+        Cuenta universidad = p.consultarCuenta(1004);
         
         System.out.println(nomina.getTipoCuenta());
         System.out.println(banco1.getTipoCuenta());
@@ -130,8 +130,8 @@ public class JPAMain {
 //        checkPersonaFields(1001);
 //        initCuentas();
 //           checkCuentas();
-//            initMovimientos();
-//            initEstatutos();
-//            checkEstatutos();
+            initMovimientos();
+            initEstatutos();
+            checkEstatutos();
     }
 }

@@ -52,14 +52,15 @@ public class JPAGeneric<E,K> implements GenericDAO<E, K>{
     @Override
     public boolean update(E object) {
         EntityTransaction transaction = eManager.getTransaction();
-        transaction.begin();
 
         try {
+            transaction.begin();
             eManager.merge(object);
             transaction.commit();
 
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             transaction.rollback();
             return false;
         }
@@ -67,10 +68,18 @@ public class JPAGeneric<E,K> implements GenericDAO<E, K>{
 
     @Override
     public boolean delete(K key) {
+        EntityTransaction transaction = eManager.getTransaction();
+
         try {
+            
+            transaction.begin();
             eManager.remove(get(key));
+            transaction.commit();
+
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
+            transaction.rollback();
             return false;
         }
     }

@@ -1,23 +1,102 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="http://localhost:8000/mi_chaucherita.css">
-        <link rel="stylesheet" href="css/stylsheet.css">
-        <title>Login</title>
-    </head>
-    <body>
-        <h1>Bienvenido a Mi Chaucherita!</h1>
-        <h2>Porfavor, ingrese sus credenciales</h2>
-        <!-- Podria, potencialmente mostrarse un mensaje de error -->
-        <form method="POST">
-            <label for="username">Usuario</label>
-            <input type="text" id="username" name="username"/>
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password"/>
-            <input type="submit" value="Ingresar"/>
-        </form>
-    </body>
-</html>
+<html lang="en">
+<head>
+	<title>Mi chaucherita Login</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+<!--===============================================================================================-->
+</head>
+<body>
+	
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+				<div class="login100-pic js-tilt" data-tilt>
+					<img src="images/LogoChaucherita.png" alt="Logo Mi Chaucherita">
+				</div>
+
+				<form class="login100-form validate-form" method="POST">
+					<span class="login100-form-title" style="padding-bottom: 0px;">
+						Bienvenido a Mi Chaucherita
+					</span>
+					<span class="login100-form-subtitle fs-15" style="padding-bottom: 2px;">
+						<br>Ingresa tus credenciales para acceder a tus finanzas personales <br>
+					</span>
+				
+
+					<div class="wrap-input100 validate-input" data-validate = "ingrese un nombre de usuario" style="padding-top: 10px;">
+						<input class="input100" type="text" id="username" name="username" placeholder="Nombre de usuario">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-envelope" aria-hidden="true"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Password is required">
+						<input class="input100" type="password" id="password" name="password" placeholder="Contraseña">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-lock" aria-hidden="true"></i>
+						</span>
+					</div>
+					
+					<div class="container-login100-form-btn">
+						<button class="login100-form-btn">
+							Ingresar
+						</button>
+					</div>
+
+					<div class="text-center p-t-12">
+						<span class="txt1">
+							Grupo 6 App Web 
+						</span>
+						
+					</div>
+
+					<div class="text-center p-t-136" style="padding-top: 40px; ">
+						<a class="txt2" href="#">
+							Proyecto Final - Aplicación Web de Inteligencia Financiera personal
+							<i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	
+
+	
+<!--===============================================================================================-->	
+	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/bootstrap/js/popper.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/tilt/tilt.jquery.min.js"></script>
+	<script >
+		$('.js-tilt').tilt({
+			scale: 1.1
+		})
+	</script>
+<!--===============================================================================================-->
+	<script src="js/main.js"></script>

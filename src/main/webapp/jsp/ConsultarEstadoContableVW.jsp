@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -8,8 +9,8 @@
         <title>Estado contable</title>
     </head>
     <body>
-        <h1>Estado contable ${estado.fechaInicio} - ${estado.fechaFin} - </h1>
-        <a href="?action=generate">Generar estado contable</a>
+        <h1>Estado contable ${estado.fechaInicio} - ${estado.fechaFin} </h1>
+        <a href="?action=delete&id=${estado.id}">Eliminar</a>
         <table>
             <tr>
                 <th>Fecha de realización</th>
@@ -17,23 +18,14 @@
                 <th>Valor</th>
                 <th>Cuenta de origen</th>
                 <th>Cuenta de destino</th>
-                <th>Más</th>
             </tr>
-            <c:forEach items="${MovimientosByCuentas}" var="MovimientosByCuenta">
-                <tr>
-                    <th>Fecha de realización</th>
-                    <th>Concepto</th>
-                    <th>Valor</th>
-                    <th>Cuenta de origen</th>
-                    <th>Cuenta de destino</th>
-                    <th>Más</th>
-                </tr>
+            <c:forEach items="${movimientos}" var="movimiento">
                 <tr>                    
-                    <td>${estado.fechaInicio}</td>
-                    <td>${estado.fechaFin}</td>
-                    <td>${estado.ingresosTotales}</td>
-                    <td>${estado.egresosTotales}</td>
-                    <td><a href="?action=query&id=${estado.id}">👁</a></td>
+                    <td>${movimiento.fecha}</td>
+                    <td>${movimiento.concepto}</td>
+                    <td>${movimiento.valor}</td>
+                    <td>${movimiento.cuentaGeneradora.nombre}</td>
+                    <td>${movimiento.cuentaReceptora.nombre}</td>
                 </tr>
             </c:forEach>
         </table>

@@ -13,37 +13,12 @@
         <a href="?action=create">Crear cuenta</a>
         <a href="?action=delete">Elimnar cuentas</a>
         <a href="estado_contable">Ver estados contables</a>
-        <table>
-            <tr>
-                <th>Nombre</th>
-                <th>Balance</th>
-                <th>Actualizar</th>
-                <th>Accion</th>
-                <th>VerEstadoContable</th>
-            </tr>
-            <c:forEach items="${user.cuentasView}" var="cuenta">
-                <tr>
-                    <td>${cuenta.nombre}</td>
-                    <td>${cuenta.valorTotal}</td>
-                    <td>
-                        <a href="?action=update&id=${cuenta.id}">Actualizar</a>
-                    </td>
-                    <td>
-                        <c:if test="${cuenta.tipoCuenta.nombre == 'INGRESO'}">
-                            <a href="pagos?action=earning&id_source=${cuenta.id}">Registrar ingreso</a>
-                        </c:if>
-                        <c:if test="${cuenta.tipoCuenta.nombre == 'INGRESO_EGRESO'}">
-                            <a href="pagos?action=transfer&id_source=${cuenta.id}">Transferir valor</a>
-                        </c:if>
-                        <c:if test="${cuenta.tipoCuenta.nombre == 'EGRESO'}">
-                            <a href="pagos?action=spending&id_source=${cuenta.id}">Registrar egreso</a>
-                        </c:if>
-                    </td>
-                    <td>
-                        <a href="">👁</a>
-                    </td>
-                </tr>
-            </c:forEach>
-        </table>
+        <form method="POST">
+            <label for="start_date">Fecha inicial</label>
+            <input type="date" id="start_date" name="start_date">
+            <label for="end_date">Fecha final</label>
+            <input type="date" id="end_date" name="end_date">
+            <input type="submit">
+        </form>
     </body>
 </html>

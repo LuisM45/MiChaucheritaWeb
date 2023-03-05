@@ -9,6 +9,7 @@ import edu.epn.web.b2022.g6.appweb.chauchera.models.Cuenta;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.EstadoContable;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Movimiento;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Persona;
+import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.DaoFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -18,6 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.Date;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -122,43 +124,49 @@ public class ControladorEstadoContable extends HttpServlet {
             return;
         }
         
-        
-        BiFunction<Cuenta,Collection<Movimiento>,Double> sumarizer = (cuenta,movimientos)->{
-                double egresos = movimientos.stream()
-                        .filter(m->m.getCuentaGeneradora().equals(cuenta))
-                        .mapToDouble(t->t.getValor())
-                        .sum();
-                double ingresos = movimientos.stream()
-                        .filter(m->m.getCuentaReceptora().equals(cuenta))
-                        .mapToDouble(t->t.getValor())
-                        .sum();
-                return ingresos-egresos;
-        };
-        
-        Map<String,List<Cuenta>> cuentasByTipo = user.getCuentasView().stream()
-            .collect(Collectors.groupingBy(c->c.getTipoCuenta().getNombre()));
-        
-        Map<EstadoContable,Map<Cuenta,Double>> valorByCuentaByEstadoContable = new HashMap<>();
-        for(EstadoContable ec: user.getEstadosContablesView()){
-            Map<Cuenta,Double>  valorByCuenta = ec.getmovimientosRegistradosPorCuentaView()
-                    .entrySet().stream()
-                    .map(t->Map.entry(t.getKey(),sumarizer.apply(t.getKey(), t.getValue())))
-                    .collect(Collectors.toMap(k->k.getKey(), v->v.getValue()));
-            
-
-        }
+        EstadoContable estado = user.consultarEstadoContable(id);
+        List<Movimiento> movimientos = estado.getmovimientosRegistradosPorCuentaView()
+                .values()
+                .stream()
+                .flatMap(t->t.stream())
+                .sorted((t1,t2)->t1.getFecha().compareTo(t2.getFecha()))
+                .toList();
         
         user.getEstadosContablesView().forEach(t->t.setEstadoContable());//Tiene que actualizarse y no se porque. Whatevs
-        request.setAttribute("cuentasByTipo", cuentasByTipo);
-        request.setAttribute("user", user);
-        request.setAttribute("valorByCuentaByEstadoContable", valorByCuentaByEstadoContable);
+        request.setAttribute("estado", estado);
+        request.setAttribute("movimientos", movimientos);
         request.getRequestDispatcher("jsp/ConsultarEstadoContableVW.jsp").forward(request, response);
     }
     
-    private void generarEstadoContable(HttpServletRequest request, HttpServletResponse response){
+    private void generarEstadoContable(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        Persona user = getUser(request, response);
+        LocalDate startDate = StaticUtils.tryParse(LocalDate::parse,request.getParameter("start_date"));
+        LocalDate endDate = StaticUtils.tryParse(LocalDate::parse,request.getParameter("end_date"));
         
+        if(startDate ==null || endDate == null){
+            request.getRequestDispatcher("jsp/GenerarEstadoContableVW.jsp").forward(request, response);
+            return;
+        }
+        
+        EstadoContable estadoContable = user.generarEstadoContable(startDate, endDate);
+        DaoFactory.getDaoFactory().getEstadoContableDAO().create(estadoContable);
+        
+        response.sendRedirect("estado_contable");
+
     }
     
-    private void eliminarEstadoContable(HttpServletRequest request, HttpServletResponse response){
+    private void eliminarEstadoContable(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+        Persona user = getUser(request, response);
+        Integer id = StaticUtils.tryParse(Integer::valueOf,request.getParameter("id"));
+        
+        if(id==null){
+            response.sendRedirect("estado_contable");
+            return;
+        }
+        
+        DaoFactory.getDaoFactory().getEstadoContableDAO().delete(id);
+        user.eliminarEstadoContable(id);
+        
+        listarEstadosContables(request, response);
     }
 }

@@ -6,7 +6,9 @@ import java.util.Collection;
 
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.EstadoContableDAO;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.runtime.JPAInstantAttributeConverter;
+import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -31,12 +33,10 @@ public class EstadoContable {
     private Integer id;
     
     @Column(name = "start_datetime")
-    @Convert(converter = JPAInstantAttributeConverter.class)
-    private Instant fechaInicio;
+    private LocalDate fechaInicio;
     
     @Column(name = "end_datetime")
-    @Convert(converter = JPAInstantAttributeConverter.class)
-    private Instant fechaFin;
+    private LocalDate fechaFin;
     
     @Transient
     private double ingresosTotales;
@@ -61,7 +61,7 @@ public class EstadoContable {
         movimientosRegistradosPorCuenta = new HashMap<>();
     }
     
-    public EstadoContable(Integer id, Persona personaDuenia, Instant fechaInicio, Instant fechaFin, Map<Cuenta,Collection<Movimiento>> movimientosRegistradosPorCuenta, double ingresos, double egresos) {
+    public EstadoContable(Integer id, Persona personaDuenia, LocalDate fechaInicio, LocalDate fechaFin, Map<Cuenta,Collection<Movimiento>> movimientosRegistradosPorCuenta, double ingresos, double egresos) {
         this.id = id;
         this.personaDuenia = personaDuenia;
         this.fechaInicio = fechaInicio;
@@ -73,16 +73,16 @@ public class EstadoContable {
 
 
 
-    public EstadoContable(Persona personaDuenia, Instant fechaInicio, Instant fechaFin, Map<Cuenta,Collection<Movimiento>> movimientosRegistradosPorCuenta, double ingresos, double egresos) {
+    public EstadoContable(Persona personaDuenia, LocalDate fechaInicio, LocalDate fechaFin, Map<Cuenta,Collection<Movimiento>> movimientosRegistradosPorCuenta, double ingresos, double egresos) {
         this(null,personaDuenia,fechaInicio,fechaFin,movimientosRegistradosPorCuenta,ingresos,egresos);
     }
     
-    public EstadoContable(Persona personaDuenia, Instant fechaInicio, Instant fechaFin) {
+    public EstadoContable(Persona personaDuenia, LocalDate fechaInicio, LocalDate fechaFin) {
         this(null,personaDuenia,fechaInicio,fechaFin,null,0,0);
         setEstadoContable();
     }
     
-    public EstadoContable(int id, Persona personaDuenia, Instant fechaInicio, Instant fechaFin) {
+    public EstadoContable(int id, Persona personaDuenia, LocalDate fechaInicio, LocalDate fechaFin) {
         this(id,personaDuenia,fechaInicio,fechaFin,null,0,0);
         setEstadoContable();
     }
@@ -157,11 +157,11 @@ public class EstadoContable {
         return id;
     }
 
-    public Instant getFechaInicio() {
+    public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 
-    public Instant getFechaFin() {
+    public LocalDate getFechaFin() {
         return fechaFin;
     }
 
@@ -193,12 +193,12 @@ public class EstadoContable {
         this.id = id;
     }
 
-    public void setFechaInicio(Instant fechaInicio) {
+    public void setFechaInicio(LocalDate fechaInicio) {
         this.fechaInicio = fechaInicio;
         setEstadoContable();
     }
 
-    public void setFechaFin(Instant fechaFin) {
+    public void setFechaFin(LocalDate fechaFin) {
         this.fechaFin = fechaFin;
         setEstadoContable();
     }

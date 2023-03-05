@@ -12,6 +12,8 @@
         <h1>Bienvenido ${user.nombre}</h1>
         <a href="?action=create">Crear cuenta</a>
         <a href="?action=delete">Elimnar cuentas</a>
+        <a href="estado_contable">Ver estados contables</a>
+        <h2>Cuentas Ingreso</h2>
         <table>
             <tr>
                 <th>Nombre</th>
@@ -20,7 +22,7 @@
                 <th>Accion</th>
                 <th>VerEstadoContable</th>
             </tr>
-            <c:forEach items="${user.cuentasView}" var="cuenta">
+            <c:forEach items="${cuentasIngreso}" var="cuenta">
                 <tr>
                     <td>${cuenta.nombre}</td>
                     <td>${cuenta.valorTotal}</td>
@@ -28,16 +30,58 @@
                         <a href="?action=update&id=${cuenta.id}">Actualizar</a>
                     </td>
                     <td>
-                        <c:if test="${cuenta.tipoCuenta.nombre == 'INGRESO'}">
-                            <a href="pagos?action=earning&id_source=${cuenta.id}">Registrar ingreso</a>
-                        </c:if>
-                        <c:if test="${cuenta.tipoCuenta.nombre == 'INGRESO_EGRESO'}">
-                            <a href="pagos?action=transfer&id_source=${cuenta.id}">Transferir valor</a>
-                        </c:if>
-                        <c:if test="${cuenta.tipoCuenta.nombre == 'EGRESO'}">
-                            <a href="pagos?action=spending&id_source=${cuenta.id}">Registrar egreso</a>
-                        </c:if>
+                        <a href="pagos?action=earning&id_source=${cuenta.id}">Registrar ingreso</a>
                     </td>
+                    <td>
+                        <a href="">👁</a>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+        <h2>Cuentas Egreso</h2>
+        <table>
+            <tr>
+                <th>Nombre</th>
+                <th>Balance</th>
+                <th>Actualizar</th>
+                <th>Accion</th>
+                <th>VerEstadoContable</th>
+            </tr>
+            <c:forEach items="${cuentasEgreso}" var="cuenta">
+                <tr>
+                    <td>${cuenta.nombre}</td>
+                    <td>${cuenta.valorTotal}</td>
+                    <td>
+                        <a href="?action=update&id=${cuenta.id}">Actualizar</a>
+                    </td>
+                    <td>
+                        <a href="pagos?action=spending&id_source=${cuenta.id}">Registrar egreso</a>
+                    </td>
+                    <td>
+                        <a href="">👁</a>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+        <h2>Cuentas Ingreso y Egreso</h2>
+        <table>
+            <tr>
+                <th>Nombre</th>
+                <th>Balance</th>
+                <th>Actualizar</th>
+                <th>Accion</th>
+                <th>VerEstadoContable</th>
+            </tr>
+            <c:forEach items="${cuentasIngresoEgreso}" var="cuenta">
+                <tr>
+                    <td>${cuenta.nombre}</td>
+                    <td>${cuenta.valorTotal}</td>
+                    <td>
+                        <a href="?action=update&id=${cuenta.id}">Actualizar</a>
+                    </td>
+                    <td>
+                            <a href="pagos?action=transfer&id_source=${cuenta.id}">Transferir valor</a>
+                        </td>
                     <td>
                         <a href="">👁</a>
                     </td>

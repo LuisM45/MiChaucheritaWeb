@@ -2,9 +2,11 @@ package edu.epn.web.b2022.g6.appweb.chauchera.models;
 
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.CuentaDAO;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -151,7 +153,7 @@ public class Cuenta {
      * El movimiento realizado debe tener a null como su cuenta de origen
      * @param valor 
      */
-    public Movimiento registrarIngreso(double valor, Cuenta cuentaDesinto,  Instant fecha, String concepto){
+    public Movimiento registrarIngreso(double valor, Cuenta cuentaDesinto,  LocalDate fecha, String concepto){
         if(!tipoCuenta.getNombre().equals("INGRESO"))
                 throw new RuntimeException("This action be performed onyl by INGRESO accounts");
         if(cuentaDesinto.getTipoCuenta().getNombre().equals("INGRESO"))
@@ -168,7 +170,7 @@ public class Cuenta {
      * El movimiento realizado debe tener a null como su cuenta de destino
      * @param valor 
      */
-    public Movimiento registrarEgreso(double valor, Cuenta cuentaOrigen,  Instant fecha, String concepto){
+    public Movimiento registrarEgreso(double valor, Cuenta cuentaOrigen,  LocalDate fecha, String concepto){
         if(!tipoCuenta.getNombre().equals("EGRESO"))
             throw new RuntimeException("This action be performed onyl by EGRESO accounts");
         if(cuentaOrigen.getTipoCuenta().getNombre().equals("EGRESO"))
@@ -186,7 +188,7 @@ public class Cuenta {
      * @param valor
      * @param cuentaDesinto 
      */
-    public Movimiento transferirDinero(double valor, Cuenta cuentaDesinto, Instant fecha, String concepto){
+    public Movimiento transferirDinero(double valor, Cuenta cuentaDesinto, LocalDate fecha, String concepto){
         if(!tipoCuenta.getNombre().equals("INGRESO_EGRESO"))
                 throw new RuntimeException("This action is allowed only for INGRESOEGRESO accounts");
         if(!cuentaDesinto.getTipoCuenta().getNombre().equals("INGRESO_EGRESO"))
@@ -194,7 +196,7 @@ public class Cuenta {
         return transferirDineroGenerico(valor, this, cuentaDesinto, fecha, concepto);
     }
     
-    private static Movimiento transferirDineroGenerico(double valor, Cuenta cuentaOrigen, Cuenta cuentaDestino, Instant fecha, String concepto){
+    private static Movimiento transferirDineroGenerico(double valor, Cuenta cuentaOrigen, Cuenta cuentaDestino, LocalDate fecha, String concepto){
         Movimiento mov = new Movimiento(cuentaOrigen, concepto, cuentaDestino, fecha, valor);
         
         if (cuentaOrigen!=null){
@@ -215,17 +217,17 @@ public class Cuenta {
      * @param fechaFin inclusiva
      * @return Movimientos dentro de un margen de tiempo de la cuenta
      */
-    public Collection<Movimiento> obtenerMovimientoPorFechas(Instant fechaInicio, Instant fechaFin){
+    public Collection<Movimiento> obtenerMovimientoPorFechas(LocalDate fechaInicio, LocalDate fechaFin){
         List<Movimiento> response = new ArrayList<>();
         
         response.addAll(movimientosGenerados.stream()
-            .filter(m->fechaInicio.isBefore(m.getFecha()))
-            .filter(m->fechaFin.isAfter(m.getFecha()))
+            .filter(m->!fechaInicio.isAfter(m.getFecha()))
+            .filter(m->!fechaFin.isBefore(m.getFecha()))
             .toList());
         
         response.addAll(movimientosRecibidos.stream()
-            .filter(m->fechaInicio.isBefore(m.getFecha()))
-            .filter(m->fechaFin.isAfter(m.getFecha()))
+            .filter(m->!fechaInicio.isAfter(m.getFecha()))
+            .filter(m->!fechaFin.isBefore(m.getFecha()))
             .toList());
         
         return response;

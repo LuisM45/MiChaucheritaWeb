@@ -3,6 +3,8 @@ package edu.epn.web.b2022.g6.appweb.chauchera.models;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.MovimientoDAO;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.runtime.JPAInstantAttributeConverter;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -25,9 +27,8 @@ public class Movimiento {
     @Column(name = "concept")
     private String concepto;
     
-    @Column(name = "datetime")
-    @Convert(converter = edu.epn.web.b2022.g6.appweb.chauchera.models.daos.runtime.JPAInstantAttributeConverter.class)
-    private Instant fecha;
+    @Column(name = "date")
+    private LocalDate fecha;
     
     @Column(name = "ammount")
     private double valor;
@@ -43,7 +44,7 @@ public class Movimiento {
     public Movimiento() {
     }
     
-    public Movimiento(Integer id, String concepto, Cuenta cuentaOrigen, Cuenta cuentaDestino, Instant fecha, double valor) {
+    public Movimiento(Integer id, String concepto, Cuenta cuentaOrigen, Cuenta cuentaDestino, LocalDate fecha, double valor) {
         this.id = id;
         this.cuentaGeneradora = cuentaOrigen;
         this.cuentaReceptora = cuentaDestino;
@@ -52,7 +53,7 @@ public class Movimiento {
         this.valor = valor;
     }
 
-    public Movimiento(Cuenta cuentaOrigen,String concepto, Cuenta cuentaDestino, Instant fecha, double valor) {
+    public Movimiento(Cuenta cuentaOrigen,String concepto, Cuenta cuentaDestino, LocalDate fecha, double valor) {
         this(null,concepto,cuentaOrigen,cuentaDestino,fecha,valor);
     }
 
@@ -64,7 +65,7 @@ public class Movimiento {
         this.concepto = concepto;
     }
 
-    public void setFecha(Instant fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 
@@ -100,7 +101,7 @@ public class Movimiento {
         return cuentaReceptora;
     }
 
-    public Instant getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 

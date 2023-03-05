@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package edu.epn.web.b2022.g6.appweb.chauchera.controllers;
 
 import com.sun.net.httpserver.HttpServer;
@@ -16,8 +12,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -39,7 +38,6 @@ public class ControladorCuenta extends HttpServlet {
     
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         Persona user = (Persona) getUser(request, response);
-        System.out.println(user);
         if(user==null) return;
         
         String action = request.getParameter("action");
@@ -74,6 +72,13 @@ public class ControladorCuenta extends HttpServlet {
         Persona user = getUser(request, response);
         user.getCuentasView().forEach(t->t.setValorTotal());
         request.setAttribute("user", user);
+        Map<String,List<Cuenta>> cuentasPorTipo = user.getCuentasView()
+                .stream()
+                .collect(Collectors.groupingBy(t->t.getTipoCuenta().getNombre()));
+        
+        request.setAttribute("cuentasIngreso", cuentasPorTipo.get("INGRESO"));
+        request.setAttribute("cuentasEgreso", cuentasPorTipo.get("EGRESO"));
+        request.setAttribute("cuentasIngresoEgreso", cuentasPorTipo.get("INGRESO_EGRESO"));
         request.getRequestDispatcher("jsp/ListarCuentasVW.jsp").forward(request, response);
     }
     

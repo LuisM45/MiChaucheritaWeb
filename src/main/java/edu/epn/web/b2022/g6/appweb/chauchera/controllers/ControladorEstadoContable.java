@@ -18,9 +18,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.Date;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -58,7 +62,6 @@ public class ControladorEstadoContable extends HttpServlet {
             default:
                 listarEstadosContables(request, response);
         }
-        java.util.Date i;
     }
 
     @Override
@@ -76,7 +79,37 @@ public class ControladorEstadoContable extends HttpServlet {
     private void listarEstadosContables(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         Persona user = getUser(request, response);
         user.getEstadosContablesView().forEach(t->t.setEstadoContable());//Tiene que actualizarse y no se porque. Whatevs
-        request.setAttribute("estadosContables", user.getEstadosContablesView());
+        
+                BiFunction<Cuenta,Collection<Movimiento>,Double> sumarizer = (cuenta,movimientos)->{
+                double egresos = movimientos.stream()
+                        .filter(m->m.getCuentaGeneradora().equals(cuenta))
+                        .mapToDouble(t->t.getValor())
+                        .sum();
+                double ingresos = movimientos.stream()
+                        .filter(m->m.getCuentaReceptora().equals(cuenta))
+                        .mapToDouble(t->t.getValor())
+                        .sum();
+                return ingresos-egresos;
+        };
+        
+        Map<String,List<Cuenta>> cuentasByTipo = user.getCuentasView().stream()
+            .collect(Collectors.groupingBy(c->c.getTipoCuenta().getNombre()));
+        
+        Map<EstadoContable,Map<Cuenta,Double>> valorByCuentaByEstadoContable = new HashMap<>();
+        for(EstadoContable ec: user.getEstadosContablesView()){
+            Map<Cuenta,Double>  valorByCuenta = ec.getmovimientosRegistradosPorCuentaView()
+                    .entrySet().stream()
+                    .map(t->Map.entry(t.getKey(),sumarizer.apply(t.getKey(), t.getValue())))
+                    .collect(Collectors.toMap(k->k.getKey(), v->v.getValue()));
+            
+            valorByCuentaByEstadoContable.put(ec, valorByCuenta);
+        }
+        
+        user.getEstadosContablesView().forEach(t->t.setEstadoContable());//Tiene que actualizarse y no se porque. Whatevs
+        
+        request.setAttribute("cuentasByTipo", cuentasByTipo);
+        request.setAttribute("valorByCuentaByEstadoContable", valorByCuentaByEstadoContable);
+        
         request.getRequestDispatcher("jsp/ListarEstadoContableVW.jsp").forward(request, response);
     }
     
@@ -89,16 +122,36 @@ public class ControladorEstadoContable extends HttpServlet {
             return;
         }
         
-        List<Map<String,Map<Cuenta,Integer>>> estadosContables = new LinkedList<>();
-//        for(EstadoContable ec: user.getEstadosContablesView()){
-//            ec.getmovimientosRegistradosPorCuentaView()
-//                    .entrySet()
-//                    .stream()
-//                    .map(t->Map.entry(t.getKey(), t.getValue().))
-//        }
-//        
-//        user.getEstadosContablesView().forEach(t->t.setEstadoContable());//Tiene que actualizarse y no se porque. Whatevs
-//        request.setAttribute("estadosContables", ());
+        
+        BiFunction<Cuenta,Collection<Movimiento>,Double> sumarizer = (cuenta,movimientos)->{
+                double egresos = movimientos.stream()
+                        .filter(m->m.getCuentaGeneradora().equals(cuenta))
+                        .mapToDouble(t->t.getValor())
+                        .sum();
+                double ingresos = movimientos.stream()
+                        .filter(m->m.getCuentaReceptora().equals(cuenta))
+                        .mapToDouble(t->t.getValor())
+                        .sum();
+                return ingresos-egresos;
+        };
+        
+        Map<String,List<Cuenta>> cuentasByTipo = user.getCuentasView().stream()
+            .collect(Collectors.groupingBy(c->c.getTipoCuenta().getNombre()));
+        
+        Map<EstadoContable,Map<Cuenta,Double>> valorByCuentaByEstadoContable = new HashMap<>();
+        for(EstadoContable ec: user.getEstadosContablesView()){
+            Map<Cuenta,Double>  valorByCuenta = ec.getmovimientosRegistradosPorCuentaView()
+                    .entrySet().stream()
+                    .map(t->Map.entry(t.getKey(),sumarizer.apply(t.getKey(), t.getValue())))
+                    .collect(Collectors.toMap(k->k.getKey(), v->v.getValue()));
+            
+
+        }
+        
+        user.getEstadosContablesView().forEach(t->t.setEstadoContable());//Tiene que actualizarse y no se porque. Whatevs
+        request.setAttribute("cuentasByTipo", cuentasByTipo);
+        request.setAttribute("user", user);
+        request.setAttribute("valorByCuentaByEstadoContable", valorByCuentaByEstadoContable);
         request.getRequestDispatcher("jsp/ConsultarEstadoContableVW.jsp").forward(request, response);
     }
     

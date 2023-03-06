@@ -1,5 +1,6 @@
-package edu.epn.web.b2022.g6.appweb.chauchera.controllers;
+package edu.epn.web.b2022.g6.appweb.chauchera.rest;
 
+import edu.epn.web.b2022.g6.appweb.chauchera.controllers.*;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Persona;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.DaoFactory;
 import java.io.IOException;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet(name = "LoginController", urlPatterns = {"/login"})
 public class LoginController extends HttpServlet {
 
 

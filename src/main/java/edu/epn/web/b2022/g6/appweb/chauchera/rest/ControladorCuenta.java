@@ -1,5 +1,6 @@
-package edu.epn.web.b2022.g6.appweb.chauchera.controllers;
+package edu.epn.web.b2022.g6.appweb.chauchera.rest;
 
+import edu.epn.web.b2022.g6.appweb.chauchera.controllers.*;
 import com.sun.net.httpserver.HttpServer;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Cuenta;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Persona;
@@ -22,7 +23,6 @@ import java.util.stream.Collectors;
  *
  * @author luism
  */
-@WebServlet(name = "ControladorCuenta", urlPatterns = {"/cuentas"})
 public class ControladorCuenta extends HttpServlet { 
     
     private Persona getUser(HttpServletRequest request, HttpServletResponse response){

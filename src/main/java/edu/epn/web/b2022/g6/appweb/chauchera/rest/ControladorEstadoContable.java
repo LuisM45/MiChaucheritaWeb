@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package edu.epn.web.b2022.g6.appweb.chauchera.controllers;
+package edu.epn.web.b2022.g6.appweb.chauchera.rest;
 
+import edu.epn.web.b2022.g6.appweb.chauchera.controllers.*;
 import MiscTools.StaticUtils;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Cuenta;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.EstadoContable;
@@ -31,7 +32,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-@WebServlet(name = "ControladorEstadoContable", urlPatterns = {"/estado_contable"})
 public class ControladorEstadoContable extends HttpServlet {
 
     private Persona getUser(HttpServletRequest request, HttpServletResponse response){

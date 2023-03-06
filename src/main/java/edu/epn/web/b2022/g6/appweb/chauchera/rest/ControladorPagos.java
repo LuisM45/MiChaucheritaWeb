@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package edu.epn.web.b2022.g6.appweb.chauchera.controllers;
+package edu.epn.web.b2022.g6.appweb.chauchera.rest;
 
+import edu.epn.web.b2022.g6.appweb.chauchera.controllers.*;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Cuenta;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Movimiento;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Persona;
@@ -32,7 +33,6 @@ import java.util.logging.Logger;
  *
  * @author luism
  */
-@WebServlet(name = "ControladorPagos", urlPatterns = {"/pagos"})
 public class ControladorPagos extends HttpServlet {
 
     private Persona getUser(HttpServletRequest request, HttpServletResponse response){

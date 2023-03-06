@@ -29,7 +29,7 @@ CREATE TABLE `movement`(
     `recipient_id` BIGINT,
     `id` BIGINT NOT NULL AUTO_INCREMENT,
     `concept` VARCHAR(255) NOT NULL,
-    `datetime` DATETIME NOT NULL,
+    `date` DATE NOT NULL,
     `ammount` DECIMAL(8, 2) NOT NULL,
     PRIMARY KEY (`id`)
 );

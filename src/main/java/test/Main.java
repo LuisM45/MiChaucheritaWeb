@@ -6,6 +6,7 @@ import edu.epn.web.b2022.g6.appweb.chauchera.models.TipoCuenta;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.DaoFactory;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.TipoCuentaDAO;
 import java.time.Instant;
+import java.time.LocalDate;
 
 /**
  *
@@ -31,18 +32,18 @@ public class Main {
         
         for(var v: p.getCuentasView()) System.out.println(v);
         
-        nomina.registrarIngreso(1000,banco1, Instant.parse("2020-01-01T20:00:00Z"),"Nomina enero1" );
-        nomina.registrarIngreso(1000,banco1, Instant.parse("2020-01-02T20:00:00Z"),"Nomina enero2" );
-        nomina.registrarIngreso(1000,banco1, Instant.parse("2020-01-03T20:00:00Z"),"Nomina enero3" );
-        banco1.transferirDinero(1000, banco2, Instant.parse("2020-01-04T20:00:00Z"), "Sample movement");
-        banco1.transferirDinero(500, banco2, Instant.parse("2020-01-05T20:00:00Z"), "Pagos diversos de matriculas-Movement");
-        universidad.registrarEgreso(250, banco2, Instant.parse("2020-01-06T20:00:00Z"), "Pagos diversos de matriculas");
+        nomina.registrarIngreso(1000,banco1, LocalDate.parse("2020-01-01"),"Nomina enero1" );
+        nomina.registrarIngreso(1000,banco1, LocalDate.parse("2020-01-02"),"Nomina enero2" );
+        nomina.registrarIngreso(1000,banco1, LocalDate.parse("2020-01-03"),"Nomina enero3" );
+        banco1.transferirDinero(1000, banco2, LocalDate.parse("2020-01-04"), "Sample movement");
+        banco1.transferirDinero(500, banco2, LocalDate.parse("2020-01-05"), "Pagos diversos de matriculas-Movement");
+        universidad.registrarEgreso(250, banco2, LocalDate.parse("2020-01-06"), "Pagos diversos de matriculas");
         p.cerrarCuenta(1);
         p.consultarCuenta(2).setCuenta(new Cuenta(null,"Mi vecino",tc.getByName("INGRESO")));
         for(var v: p.getCuentasView()) System.out.println(v);
         
-        p.generarEstadoContable(Instant.parse("2020-01-02T20:00:00Z"), Instant.parse("2020-01-05T20:00:00Z"));
-        p.generarEstadoContable(Instant.parse("2020-01-04T20:00:00Z"), Instant.parse("2020-01-08T20:00:00Z"));
+        p.generarEstadoContable(LocalDate.parse("2020-01-02"), LocalDate.parse("2020-01-05"));
+        p.generarEstadoContable(LocalDate.parse("2020-01-04"), LocalDate.parse("2020-01-08"));
         
         for(var v: p.getEstadosContablesView()) System.out.println(v);
         

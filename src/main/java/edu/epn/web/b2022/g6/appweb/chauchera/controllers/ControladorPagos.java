@@ -23,6 +23,8 @@ import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.List;
 import MiscTools.StaticUtils;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -84,7 +86,7 @@ public class ControladorPagos extends HttpServlet {
         Integer idRecipient = StaticUtils.tryParse(Integer::valueOf,request.getParameter("id_recipient"));
         Double value = StaticUtils.tryParse(Double::valueOf,request.getParameter("value"));
         String concept = request.getParameter("concept");
-        Instant date = StaticUtils.tryParse(StaticUtils::parseDateStringToInstant,request.getParameter("date"));
+        LocalDate date = StaticUtils.tryParse(LocalDate::parse,request.getParameter("date"));
         
         if(idRecipient==null || value==null || concept==null || date==null){
             TipoCuenta tipoIngreso = DaoFactory.getDaoFactory().getTipoCuentaDAO().getByName("INGRESO");
@@ -112,8 +114,7 @@ public class ControladorPagos extends HttpServlet {
         Integer idRecipient = StaticUtils.tryParse(Integer::valueOf,request.getParameter("id_recipient"));
         Double value = StaticUtils.tryParse(Double::valueOf,request.getParameter("value"));
         String concept = request.getParameter("concept");
-        Instant date = StaticUtils.tryParse(StaticUtils::parseDateStringToInstant,request.getParameter("date"));
-        
+        LocalDate date = StaticUtils.tryParse(LocalDate::parse,request.getParameter("date"));
         
         
         if(idRecipient==null || value==null || concept==null || date==null){
@@ -142,7 +143,7 @@ public class ControladorPagos extends HttpServlet {
         Integer idRecipient = StaticUtils.tryParse(Integer::valueOf,request.getParameter("id_recipient"));
         Double value = StaticUtils.tryParse(Double::valueOf,request.getParameter("value"));
         String concept = request.getParameter("concept");
-        Instant date = StaticUtils.tryParse(StaticUtils::parseDateStringToInstant,request.getParameter("date"));
+        LocalDate date = StaticUtils.tryParse(LocalDate::parse,request.getParameter("date"));
         
         if(idRecipient==null || value==null || concept==null || date==null){
             TipoCuenta tipoIngreso = DaoFactory.getDaoFactory().getTipoCuentaDAO().getByName("INGRESO");

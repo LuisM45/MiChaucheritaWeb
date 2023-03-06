@@ -11,6 +11,7 @@ import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.runtime.JPACuentaDAO;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.runtime.JPAPersonaDAO;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.runtime.JPATipoCuentaDAO;
 import java.time.Instant;
+import java.time.LocalDate;
 
 public class JPAMain {
     private static TipoCuentaDAO tipoCuentaDAO = new JPATipoCuentaDAO();
@@ -84,12 +85,12 @@ public class JPAMain {
         System.out.println(banco1.getTipoCuenta());
         System.out.println(universidad.getTipoCuenta());
         
-        nomina.registrarIngreso(1000,banco1, Instant.parse("2020-01-01T20:00:00Z"),"Nomina enero1" );
-        nomina.registrarIngreso(1000,banco1, Instant.parse("2020-01-02T20:00:00Z"),"Nomina enero2" );
-        nomina.registrarIngreso(1000,banco1, Instant.parse("2020-01-03T20:00:00Z"),"Nomina enero3" );
-        banco1.transferirDinero(1000, banco2, Instant.parse("2020-01-04T20:00:00Z"), "Sample movement");
-        banco1.transferirDinero(500, banco2, Instant.parse("2020-01-05T20:00:00Z"), "Sample movement 2");
-        universidad.registrarEgreso(250,banco2, Instant.parse("2020-01-06T20:00:00Z"), "Pagos diversos de matriculas");
+        nomina.registrarIngreso(1000,banco1, LocalDate.parse("2020-01-01"),"Nomina enero1" );
+        nomina.registrarIngreso(1000,banco1, LocalDate.parse("2020-01-02"),"Nomina enero2" );
+        nomina.registrarIngreso(1000,banco1, LocalDate.parse("2020-01-03"),"Nomina enero3" );
+        banco1.transferirDinero(1000, banco2, LocalDate.parse("2020-01-04"), "Sample movement");
+        banco1.transferirDinero(500, banco2, LocalDate.parse("2020-01-05"), "Sample movement 2");
+        universidad.registrarEgreso(250,banco2, LocalDate.parse("2020-01-06"), "Pagos diversos de matriculas");
         
         personaDAO.update(p);
     }
@@ -98,8 +99,8 @@ public class JPAMain {
         Persona p =  personaDAO.get(1001);
         
         
-        p.generarEstadoContable(Instant.parse("2020-01-02T20:00:00Z"), Instant.parse("2020-01-05T20:00:00Z"));
-        p.generarEstadoContable(Instant.parse("2020-01-04T20:00:00Z"), Instant.parse("2020-01-08T20:00:00Z"));
+        p.generarEstadoContable(LocalDate.parse("2020-01-02"), LocalDate.parse("2020-01-05"));
+        p.generarEstadoContable(LocalDate.parse("2020-01-04"), LocalDate.parse("2020-01-08"));
         
         personaDAO.update(p);
         
@@ -130,8 +131,8 @@ public class JPAMain {
 //        checkPersonaFields(1001);
 //        initCuentas();
 //           checkCuentas();
-            initMovimientos();
-            initEstatutos();
-            checkEstatutos();
+//            initMovimientos();
+//            initEstatutos();
+//            checkEstatutos();
     }
 }

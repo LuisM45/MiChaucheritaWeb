@@ -3,6 +3,7 @@ package edu.epn.web.b2022.g6.appweb.chauchera.models;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.PersonaDAO;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Cuenta;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -115,7 +116,7 @@ public class Persona {
                 .findFirst().orElse(null);
     }
     
-    public EstadoContable generarEstadoContable(Instant fechaInicio, Instant fechaFin){
+    public EstadoContable generarEstadoContable(LocalDate fechaInicio, LocalDate fechaFin){
         EstadoContable estadoContable = new EstadoContable(this,fechaInicio, fechaFin);
         estadosContables.add(estadoContable);
         return estadoContable;
@@ -131,9 +132,5 @@ public class Persona {
                 .findFirst().orElse(null);
     }
     
-    public EstadoContable generar(int id){
-        return estadosContables.stream()
-                .filter(t->t.getId()==id)
-                .findFirst().orElse(null);
-    }
+
 }

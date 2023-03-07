@@ -1,0 +1,268 @@
+@font-face {
+    font-family: OpenSans-Regular;
+    src: url(../fonts/OpenSans/OpenSans-Regular.ttf)
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box
+}
+
+body,html {
+    height: 100%;
+    font-family: sans-serif
+}
+
+a {
+    margin: 0;
+    transition: all .4s;
+    -webkit-transition: all .4s;
+    -o-transition: all .4s;
+    -moz-transition: all .4s
+}
+
+a:focus {
+    outline: none!important
+}
+
+a:hover {
+    text-decoration: none
+}
+
+h1,h2,h3,h4,h5,h6 {
+    margin: 0
+}
+
+p {
+    margin: 0
+}
+
+ul,li {
+    margin: 0;
+    list-style-type: none
+}
+
+input {
+    display: block;
+    outline: none;
+    border: none!important
+}
+
+textarea {
+    display: block;
+    outline: none
+}
+
+textarea:focus,input:focus {
+    border-color: transparent!important
+}
+
+button {
+    outline: none!important;
+    border: none;
+    background: 0 0
+}
+
+button:hover {
+    cursor: pointer
+}
+
+iframe {
+    border: none!important
+}
+
+.limiter {
+    width: 100%;
+    margin: 0 auto
+}
+
+.container-table100 {
+width: 100%;  
+min-height: 100vh;
+display: -webkit-box;
+display: -webkit-flex;
+display: -moz-box;
+display: -ms-flexbox;
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+align-items: center;
+padding: 15px;
+background-image: radial-gradient(circle at -0.46% 31.63%, #fcc151 0, #ecc44a 6.25%, #dac643 12.5%, #c6c73f 18.75%, #b1c73c 25%, #98c63c 31.25%, #7dc43f 37.5%, #5ac143 43.75%, #22bd4a 50%, #00b853 56.25%, #00b45e 62.5%, #00b06c 68.75%, #00ac7b 75%, #00a88c 81.25%, #00a59d 87.5%, #00a2af 93.75%, #009fc1 100%);
+
+}
+
+.wrap-table100 {
+    width: 1170px
+}
+
+
+.table100-profile{
+    width: 100%;
+    background: #fff;
+    border-radius: 10px;
+   /* overflow: hidden; */
+    margin: 0 auto;
+    position: relative
+}
+
+table {
+    border-spacing: 1;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+    position: relative
+}
+
+table * {
+    position: relative
+}
+
+table td,table th {
+    padding-left: 8px
+}
+
+table thead tr {
+    height: 60px;
+    background:#00A1B2;
+}
+
+table tbody tr {
+    height: 50px
+}
+
+table tbody tr:last-child {
+    border: 0;
+}
+
+table td,table th {
+    text-align: center;
+}
+
+table td.l,table th.l {
+    text-align: center;
+}
+
+table td.c,table th.c {
+    text-align: center;
+}
+
+table td.r,table th.r {
+    text-align: center;
+}
+
+.table100-head th {
+    font-family: OpenSans-Regular;
+    font-size: 15px;
+    color: #fff;
+    line-height: 1.2;
+    font-weight: unset
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f5f5f5
+}
+
+tbody tr {
+    font-family: OpenSans-Regular;
+    font-size: 15px;
+    color: rgb(112, 112, 112);
+    line-height: 1.2;
+    font-weight: unset
+}
+
+tbody tr:hover {
+    color: #555;
+    background-color: #f5f5f5;
+    cursor: pointer
+}
+
+.column1-profile {
+    width: 130px;
+    padding-left: 3px
+}
+
+.column2-profile {
+    width: 160px
+}
+
+.column3-profile {
+    width: 45px
+}
+
+.column4-profile {
+    width: 45px;
+    margin: 0px;
+}
+
+.column5-profile {
+    width: 45px;
+
+}
+
+
+
+@media screen and (max-width: 992px) {
+    table {
+        display:block
+    }
+
+    table>*,table tr,table td,table th {
+        display: block
+    }
+
+    table thead {
+        display: none
+    }
+
+    table tbody tr {
+        height: auto;
+        padding: 37px 0
+    }
+
+    table tbody tr td {
+        padding-left: 40%!important;
+        margin-bottom: 24px
+    }
+
+    table tbody tr td:last-child {
+        margin-bottom: 0
+    }
+
+    table tbody tr td:before {
+        font-family: OpenSans-Regular;
+        font-size: 14px;
+        color: #999;
+        line-height: 1.2;
+        font-weight: unset;
+        position: absolute;
+        width: 40%;
+        left: 30px;
+        top: 0
+    }
+
+    
+
+    .column4,.column5,.column6 {
+        text-align: left
+    }
+
+    .column4,.column5,.column6,.column1,.column2,.column3 {
+        width: 100%
+    }
+
+    tbody tr {
+        font-size: 14px
+    }
+}
+
+@media(max-width: 576px) {
+    .container-table100 {
+        padding-left:15px;
+        padding-right: 15px
+    }
+}

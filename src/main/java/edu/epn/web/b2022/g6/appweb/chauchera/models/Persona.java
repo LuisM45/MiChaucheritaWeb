@@ -2,6 +2,7 @@ package edu.epn.web.b2022.g6.appweb.chauchera.models;
 
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.PersonaDAO;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Cuenta;
+import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.DaoFactory;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -85,8 +86,27 @@ public class Persona {
         return Collections.unmodifiableCollection(cuentas);
     }
     
-    public Collection<EstadoContable> getEstadosContablesView() {
-        return Collections.unmodifiableCollection(estadosContables);
+    public Collection<Movimiento> getMovimientosVeloz(LocalDate startDate, LocalDate endDate) {
+        return cuentas
+                .stream()
+                .map(t->t.obtenerMovimientoPorFechas(startDate, endDate))
+                .distinct()
+                .flatMap(t->t.stream())
+                .sorted((t1,t2)->t2.getFecha().compareTo(t1.getFecha()))
+                .toList();
+    }
+    
+    public Collection<Cuenta> getCuentasTipo(TipoCuenta tipoCuenta) {
+        return cuentas.stream().filter(c->c.getTipoCuenta().equals(tipoCuenta)).toList();
+    }
+    public Collection<Cuenta> getCuentasIngreso() {
+        return getCuentasTipo(DaoFactory.getDaoFactory().getTipoCuentaDAO().getByName("INGRESO"));
+    }
+    public Collection<Cuenta> getCuentasEgreso() {
+        return getCuentasTipo(DaoFactory.getDaoFactory().getTipoCuentaDAO().getByName("EGRESO"));
+    }
+    public Collection<Cuenta> getCuentasIngresoEgreso() {
+        return getCuentasTipo(DaoFactory.getDaoFactory().getTipoCuentaDAO().getByName("INGRESO_EGRESO"));
     }
     
     //@CrearCuenta
@@ -130,6 +150,10 @@ public class Persona {
         return estadosContables.stream()
                 .filter(t->t.getId()==id)
                 .findFirst().orElse(null);
+    }
+
+    public Collection<EstadoContable> getEstadosContablesView() {
+        return Collections.unmodifiableCollection(estadosContables);
     }
     
 

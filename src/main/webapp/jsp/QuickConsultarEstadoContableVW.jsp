@@ -1,7 +1,8 @@
 <!--desglose de todos los movimientos en un margen de tiempo.-->
 
 <!--da un resumen de todos los estados contables por cuenta.-->
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -18,7 +19,6 @@
         <link rel="stylesheet" type="text/css" href="css/main.css">
         <link rel="stylesheet" type="text/css" href="css/general.css">
         <link rel="stylesheet" type="text/css" href="css/tablesstyle.css">
-        <!--===============================================================================================-->
     </head>
     <body>
 
@@ -33,10 +33,10 @@
                                 <a class="nav-link " aria-current="page" href="perfil.html">Perfil</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" href="EstadosContables.html">Mis Cuentas</a>
+                                <a class="nav-link" href="EstadosContables.html">Mis Cuentas</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="movimientos.html">Mis Movimientos </a>
+                                <a class="nav-link active" href="movimientos.html">Mis Movimientos </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="perfil.html">Estado Contable</a>
@@ -49,36 +49,54 @@
 
                         <div class="title-container">
                             <span class="login100-form-title-tabs" style="padding-bottom: 0px; ">
-                                Crear una cuenta Nueva
+                                Movimientos  
                             </span>
                             <span class="login100-form-subtitle fs-15" style="padding-bottom: 2px;">
-                                <br>Aqui podras agregar una cuenta a la categoria que prefieras <br>
+                                <br>Aqui podras verificar todos los movimientos de tus cuentas por fechas <br>
                             </span>
                             <div class="input-container">
-                                Ingresa la información de la cuenta que deseas Crear:
-                                <div><br></div>
-                                <form action="cuentas?action=create" method="POST">
+                                Escoje la fechas para visualización de movimientos:
+                                <form action="?action=create" method="POST">
+                                    <div><br></div>
                                     <div class="row align-items-center">
                                         <div class="col">
-                                            <span class="input-group-text">Nombre de la cuenta</span>
-                                            <input name="name" type="text" class="form-control" >
+                                            <span class="input-group-text">Fecha Inicio</span>
+                                            <input name="start_date" type="month" class="form-control" >
                                         </div>
                                         <div class="col">
-                                            <span class="input-group-text">Tipo de Cuenta </span>
-                                            <select id="type" name="type" class="form-control">
-                                                <option value="EGRESO">Egreso</option>
-                                                <option value="INGRESO">Ingreso</option>
-                                                <option value="INGRESO_EGRESO">Ingreso y Egreso</option>
-                                            </select>
+                                            <span class="input-group-text">Fecha Fin</span>
+                                            <input name="end_date" type="month" class="form-control">
                                         </div>
-
                                         <div class="col botton-control">
-                                            <input type="submit" class="btn btn-primary btn-lg consulta">
-                                            <button type="button" class="btn btn-dark btn-lg nuevaConsulta">Nueva cuenta</button>
+                                            <button type="submit" class="btn btn-primary btn-lg consulta">Consultar</button>
                                         </div>
                                     </div>
                                 </form>
-                            </div>  
+                            </div>
+                        </div>
+                        <div class="table100">
+                            <table>
+                                <thead>
+                                    <tr class="table100-head">
+                                        <th class="column1">Fecha de RealizaciÃ³n</th>
+                                        <th class="column2">Concepto</th>
+                                        <th class="column3">Valor</th>
+                                        <th class="column4">Cuenta de Origen</th>
+                                        <th class="column5">Cuenta de Destino</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <c:forEach items="${movimientos}" var="movimiento">
+                                    <tr>                    
+                                        <td>${movimiento.fecha}</td>
+                                        <td>${movimiento.concepto}</td>
+                                        <td>${movimiento.valor}</td>
+                                        <td>${movimiento.cuentaGeneradora.nombre}</td>
+                                        <td>${movimiento.cuentaReceptora.nombre}</td>
+                                    </tr>
+                                </c:forEach>
+                                </tbody>
+                            </table>
                         </div>
 
 
@@ -94,5 +112,6 @@
                             })
                         </script>
                         <script src="js/main.js"></script>
+
                         </body>
                         </html>

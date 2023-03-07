@@ -24,6 +24,13 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if("logout".equals(request.getParameter("action"))){
+            request.getSession().setAttribute("user", null);
+            request.getSession().invalidate();
+            return;
+        }
+
+        
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         if(username==null || password==null){
@@ -39,7 +46,7 @@ public class LoginController extends HttpServlet {
         
         HttpSession session = request.getSession();
         session.setAttribute("user", p);
-        response.sendRedirect("cuentas");
+        response.sendRedirect("usuario");
         
     }
 

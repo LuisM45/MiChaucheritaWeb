@@ -9,6 +9,7 @@ import edu.epn.web.b2022.g6.appweb.chauchera.models.Cuenta;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.EstadoContable;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Movimiento;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Persona;
+import edu.epn.web.b2022.g6.appweb.chauchera.models.TipoCuenta;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.DaoFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,6 +22,7 @@ import java.sql.Date;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,7 +53,7 @@ public class ControladorEstadoContable extends HttpServlet {
         Persona user = (Persona) getUser(request, response);
         if(user==null) return;
         
-        String action = StaticUtils.tryParse(Object::toString,request.getParameter("action"),"list");
+        String action = StaticUtils.tryParse(Object::toString,request.getParameter("action"),"quick_list");
         
         switch (action) {
             case "query": consultarEstadoContable(request, response);
@@ -61,8 +63,11 @@ public class ControladorEstadoContable extends HttpServlet {
             case "delete": eliminarEstadoContable(request, response);
                 break;
             case "list":
-            default:
                 listarEstadosContables(request, response);
+                break;
+            case "quick_list":
+            default:
+                listarVelozEstadosContables(request, response);
         }
     }
 
@@ -78,6 +83,22 @@ public class ControladorEstadoContable extends HttpServlet {
         processRequest(request, response);
     }
 
+    private void listarVelozEstadosContables(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        Persona user = getUser(request, response);
+        if(user == null) return;
+        
+        Collection<Movimiento> movimientos = user.getCuentasEgreso().stream().flatMap(t->t.getMovimientosGeneradosView().stream()).toList();
+        LocalDate startDate = StaticUtils.tryParse(t->LocalDate.parse(t+"-01"),request.getParameter("start_date"));
+        LocalDate endDate = StaticUtils.tryParse(t->LocalDate.parse(t+"-01").minusDays(1),request.getParameter("end_date"));
+        
+        
+        if(startDate!=null && endDate!=null)
+            movimientos = user.getMovimientosVeloz(startDate, endDate);
+        
+        request.setAttribute("movimientos", movimientos);
+        request.getRequestDispatcher("jsp/QuickConsultarEstadoContableVW.jsp").forward(request, response);
+    }
+    
     private void listarEstadosContables(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         Persona user = getUser(request, response);
         user.getEstadosContablesView().forEach(t->t.setEstadoContable());//Tiene que actualizarse y no se porque. Whatevs
@@ -115,7 +136,39 @@ public class ControladorEstadoContable extends HttpServlet {
         request.getRequestDispatcher("jsp/ListarEstadoContableVW.jsp").forward(request, response);
     }
     
-    private void consultarEstadoContable(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+    private void consultarEstadoContable(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        Persona user = getUser(request, response);
+        LocalDate now= LocalDate.now();
+        LocalDate low = now.minusDays(now.getDayOfMonth()-1);
+        LocalDate high = now.minusDays(now.getDayOfMonth()).plusMonths(1);
+        
+        Collection<Movimiento> movimientos = user.getMovimientosVeloz(low, high);
+        TipoCuenta ingreso = DaoFactory.getDaoFactory().getTipoCuentaDAO().getByName("INGRESO");
+        TipoCuenta egreso = DaoFactory.getDaoFactory().getTipoCuentaDAO().getByName("EGRESO");
+        
+        
+        Double ingresos = movimientos
+                .stream()
+                .filter(t->t.getCuentaGeneradora().getTipoCuenta().equals(ingreso))
+                .mapToDouble(t->t.getValor())
+                .sum();
+        Double egresos = movimientos
+                .stream()
+                .filter(t->t.getCuentaGeneradora().getTipoCuenta().equals(egreso))
+                .mapToDouble(t->t.getValor())
+                .sum();
+        
+        Double ingresosEgresos = ingresos-egresos;
+        request.setAttribute("fecha", now.toString().substring(0, 7));
+        request.setAttribute("movimientos", movimientos);
+        request.setAttribute("ingresos", ingresos);
+        request.setAttribute("egresos", egresos);
+        request.setAttribute("ingresosEgresos", ingresosEgresos);
+        
+        request.getRequestDispatcher("jsp/ConsultarEstadoContableVW.jsp").forward(request, response);
+    }
+    
+    private void consultarEstadoContableOld(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         Persona user = getUser(request, response);
         Integer id = StaticUtils.tryParse(Integer::valueOf,request.getParameter("id"));
         

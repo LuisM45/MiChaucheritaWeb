@@ -41,10 +41,10 @@
 								<a class="nav-link active" href="cuentas">Mis Cuentas</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="">Mis Movimientos </a>
+								<a class="nav-link" href="estado_contable">Mis Movimientos </a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="estado_contable">Estado Contable</a>
+								<a class="nav-link" href="estado_contable?action=query">Estado Contable</a>
 							</li>
 						</ul>
 					</div>
@@ -123,15 +123,9 @@
                                                     <tr>
                                                         <td>${cuenta.nombre}</td>
                                                         <td>${cuenta.valorTotal}</td>
-                                                        <td>
-                                                        <a href="?action=update&id=${cuenta.id}">Actualizar</a>
-                                                        </td>
-                                                        <td>
-                                                        <a href="pagos?action=earning&id_source=${cuenta.id}">Registrar ingreso</a>
-                                                        </td>
-                                                        <td>
-                                                        <a href="">👁</a>
-                                                        </td>
+                                                        <td><a href="cuentas?action=update&id=${cuenta.id}">Actualizar</a></td>
+                                                        <td><a href="pagos?action=spending&id_source=${cuenta.id}">Registrar egreso</a></td>
+                                                        <td><a href="">👁</a></td>
                                                         </tr>
                                                 </c:forEach>
                                                     </tbody>
@@ -164,16 +158,10 @@
                                                     <tr>
                                                         <td>${cuenta.nombre}</td>
                                                         <td>${cuenta.valorTotal}</td>
-                                                        <td>
-                                                        <a href="?action=update&id=${cuenta.id}">Actualizar</a>
-                                                        </td>
-                                                        <td>
-                                                        <a href="pagos?action=earning&id_source=${cuenta.id}">Registrar ingreso</a>
-                                                        </td>
-                                                        <td>
-                                                        <a href="">👁</a>
-                                                        </td>
-                                                        </tr>
+                                                        <td><a href="cuentas?action=update&id=${cuenta.id}">Actualizar</a></td>
+                                                        <td><a href="pagos?action=transfer&id_source=${cuenta.id}">Registrar transferencia</a></td>
+                                                        <td><a href="">👁</a></td>
+                                                    </tr>
                                                 </c:forEach>
                                                     </tbody>
                                                 </table>

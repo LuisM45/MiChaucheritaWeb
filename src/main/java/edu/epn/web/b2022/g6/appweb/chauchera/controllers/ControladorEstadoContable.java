@@ -88,12 +88,19 @@ public class ControladorEstadoContable extends HttpServlet {
         if(user == null) return;
         
         Collection<Movimiento> movimientos = user.getCuentasEgreso().stream().flatMap(t->t.getMovimientosGeneradosView().stream()).toList();
+        String thisMes = LocalDate.now().toString().substring(0,7);
+        request.setAttribute("startMes", thisMes);
+        request.setAttribute("endMes", thisMes);
+        
         LocalDate startDate = StaticUtils.tryParse(t->LocalDate.parse(t+"-01"),request.getParameter("start_date"));
-        LocalDate endDate = StaticUtils.tryParse(t->LocalDate.parse(t+"-01").minusDays(1),request.getParameter("end_date"));
+        LocalDate endDate = StaticUtils.tryParse(t->LocalDate.parse(t+"-01").minusDays(1).plusMonths(1),request.getParameter("end_date"));
         
         
-        if(startDate!=null && endDate!=null)
+        if(startDate!=null && endDate!=null){
+            request.setAttribute("startMes", startDate.toString().substring(0,7));
+            request.setAttribute("endMes", endDate.toString().substring(0,7));
             movimientos = user.getMovimientosVeloz(startDate, endDate);
+        }
         
         request.setAttribute("movimientos", movimientos);
         request.getRequestDispatcher("jsp/QuickConsultarEstadoContableVW.jsp").forward(request, response);
@@ -154,7 +161,7 @@ public class ControladorEstadoContable extends HttpServlet {
                 .sum();
         Double egresos = movimientos
                 .stream()
-                .filter(t->t.getCuentaGeneradora().getTipoCuenta().equals(egreso))
+                .filter(t->t.getCuentaReceptora().getTipoCuenta().equals(egreso))
                 .mapToDouble(t->t.getValor())
                 .sum();
         

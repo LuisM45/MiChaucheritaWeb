@@ -27,6 +27,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  *
@@ -71,6 +72,8 @@ public class ControladorPagos extends HttpServlet {
         }
         
         request.setAttribute("account_source", user.consultarCuenta(id_source));
+        request.setAttribute("hoy", LocalDate.now().toString());
+        System.out.println(user.consultarCuenta(id_source));
         
         switch (action) {
             case "earning" -> registrarIngreso(request, response,user);
@@ -89,10 +92,7 @@ public class ControladorPagos extends HttpServlet {
         LocalDate date = StaticUtils.tryParse(LocalDate::parse,request.getParameter("date"));
         
         if(idRecipient==null || value==null || concept==null || date==null){
-            TipoCuenta tipoIngreso = DaoFactory.getDaoFactory().getTipoCuentaDAO().getByName("INGRESO");
-            List<Cuenta> potentialRecipients = user.getCuentasView().stream()
-                .filter((t) -> !t.getTipoCuenta().equals(tipoIngreso))
-                .toList();
+            Collection<Cuenta> potentialRecipients = Stream.concat(user.getCuentasEgreso().stream(), user.getCuentasIngresoEgreso().stream()).toList();
             
             request.setAttribute("sourceCuenta", user.consultarCuenta(idSource));
             request.setAttribute("potentialRecipients", potentialRecipients);
@@ -119,9 +119,7 @@ public class ControladorPagos extends HttpServlet {
         
         if(idRecipient==null || value==null || concept==null || date==null){
             TipoCuenta tipoIngreso = DaoFactory.getDaoFactory().getTipoCuentaDAO().getByName("INGRESO");
-            List<Cuenta> potentialRecipients = user.getCuentasView().stream()
-                .filter((t) -> t.getTipoCuenta().equals(DaoFactory.getDaoFactory().getTipoCuentaDAO().getByName("INGRESO_EGRESO")))
-                .toList(); 
+            Collection<Cuenta> potentialRecipients = user.getCuentasIngresoEgreso();
             
             request.setAttribute("sourceCuenta", user.consultarCuenta(idSource));
             request.setAttribute("potentialRecipients", potentialRecipients);
@@ -147,9 +145,7 @@ public class ControladorPagos extends HttpServlet {
         
         if(idRecipient==null || value==null || concept==null || date==null){
             TipoCuenta tipoIngreso = DaoFactory.getDaoFactory().getTipoCuentaDAO().getByName("INGRESO");
-            List<Cuenta> potentialRecipients = user.getCuentasView().stream()
-                .filter((t) -> !t.getTipoCuenta().equals(DaoFactory.getDaoFactory().getTipoCuentaDAO().getByName("EGRESO")))
-                .toList();
+            List<Cuenta> potentialRecipients = Stream.concat(user.getCuentasIngreso().stream(), user.getCuentasIngresoEgreso().stream()).toList();
             
             request.setAttribute("sourceCuenta", user.consultarCuenta(idSource));
             request.setAttribute("potentialRecipients", potentialRecipients);

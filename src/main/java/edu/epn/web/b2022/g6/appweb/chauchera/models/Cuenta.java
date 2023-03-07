@@ -87,6 +87,7 @@ public class Cuenta {
         valorTotal += movimientosRecibidos.stream()
                 .mapToDouble(t->t.getValor())
                 .sum();
+        if(tipoCuenta.getNombre().equals("INGRESO")) valorTotal*=-1;
     }
 
     public void setTipoCuenta(TipoCuenta tipoCuenta) {

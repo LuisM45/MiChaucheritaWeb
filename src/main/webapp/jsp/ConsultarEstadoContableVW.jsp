@@ -27,16 +27,16 @@
                     <div class="container navegacion" style="margin-bottom: 0px;">
                         <ul class="nav nav-tabs custom-tabs ">
                             <li class="nav-item">
-                                <a class="nav-link " aria-current="page" href="perfil.html">Perfil</a>
+                                <a class="nav-link " aria-current="page" href="usuario">Perfil</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="EstadosContables.html">Mis Cuentas</a>
+                                <a class="nav-link" href="cuentas">Mis Cuentas</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="movimientos.html">Mis Movimientos </a>
+                                <a class="nav-link" href="estado_contable">Mis Movimientos </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" href="EstadosContables.html">Estado Contable</a>
+                                <a class="nav-link active" href="estado_contable?action=query">Estado Contable</a>
                             </li>
                         </ul>
                     </div>
@@ -49,7 +49,7 @@
                                 Estado Contable
                             </span>
                             <span class="login100-form-subtitle fs-15" style="padding-bottom: 2px;">
-                                Escoje un balance para ver mÃ¡s detalles
+                                Escoje un balance para ver más detalles
                             </span>
                             <h4 class="card-header" style="Color:#188c8a">Al mes ${fecha} </h4>
 
@@ -66,7 +66,7 @@
                                             <div><br></div>
                                             <h4 class="card-header">Balance de ingresos</h4>
                                             <div><br></div>
-                                            <p class="negative dinero">${ingresos}</p>
+                                            <p class="positive dinero">${ingresos}</p>
                                         </div>
 
                                     </div>
@@ -80,7 +80,7 @@
                                             <div><br></div>
                                             <h4 class="card-header">Balance Ingresos y Egresos</h4>
                                             <div><br></div>
-                                            <p class="negative dinero">${ingresosEgresos}</p>
+                                            <p class="  dinero">${ingresosEgresos}</p>
                                         </div>
 
                                     </div>
@@ -101,7 +101,7 @@
 
 
                                     <div class="estado-cuentas"> 
-                                        <div class="table100 tabla tabla-oculta"  id="mi-tabla">
+                                        <div class="table100 tabla tabla-visible"  id="mi-tabla">
                                             <table>
                                                 <thead>
                                                     <tr class="table100-head">

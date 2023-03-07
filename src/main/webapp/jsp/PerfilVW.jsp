@@ -30,7 +30,7 @@
                                 <a class="nav-link active " aria-current="page" href="usuario">Perfil</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="EstadosContables.html">Mis Cuentas</a>
+                                <a class="nav-link" href="cuentas">Mis Cuentas</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="estado_contable">Mis Movimientos </a>
@@ -86,7 +86,7 @@
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    <c:forEach items="${user.getCuentasIngreso()}" var="cuenta">
+                                                                    <c:forEach items="${user.cuentasIngreso}" var="cuenta">
                                                                         <tr>
                                                                             <td>${cuenta.nombre}</td>
                                                                             <td>${cuenta.valorTotal}</td>
@@ -119,7 +119,7 @@
                                                                         <td>${cuenta.nombre}</td>
                                                                         <td>${cuenta.valorTotal}</td>
                                                                         <td><a href="cuentas?action=update&id=${cuenta.id}">Actualizar</a></td>
-                                                                        <td><a href="pagos?action=earning&id_source=${cuenta.id}">Registrar ingreso</a></td>
+                                                                        <td><a href="pagos?action=spending&id_source=${cuenta.id}">Registrar egreso</a></td>
                                                                     </tr>
                                                                 </c:forEach>
                                                                 </tbody>
@@ -148,7 +148,7 @@
                                                                             <td>${cuenta.nombre}</td>
                                                                             <td>${cuenta.valorTotal}</td>
                                                                             <td><a href="cuentas?action=update&id=${cuenta.id}">Actualizar</a></td>
-                                                                            <td><a href="pagos?action=earning&id_source=${cuenta.id}">Registrar ingreso</a></td>
+                                                                            <td><a href="pagos?action=transfer&id_source=${cuenta.id}">Registrar transferencia</a></td>
                                                                         </tr>
                                                                     </c:forEach>
                                                                 </tbody>

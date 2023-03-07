@@ -81,7 +81,7 @@ public class Persona {
         return nombre;
     }
 
-    //@ListarCuentas
+    
     public Collection<Cuenta> getCuentasView() {
         return Collections.unmodifiableCollection(cuentas);
     }
@@ -132,8 +132,8 @@ public class Persona {
     //@GetCuenta. NO ES USADO
     public Cuenta consultarCuenta(Integer id) {
         return cuentas.stream()
-                .filter(t->t.getId()==id)
-                .findFirst().orElse(null);
+                .filter(t->t.getId().equals(id))
+                .findAny().orElse(null);
     }
     
     public EstadoContable generarEstadoContable(LocalDate fechaInicio, LocalDate fechaFin){

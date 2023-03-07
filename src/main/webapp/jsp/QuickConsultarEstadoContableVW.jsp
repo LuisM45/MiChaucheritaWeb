@@ -30,16 +30,16 @@
                     <div class="container navegacion" style="margin-bottom: 0px;">
                         <ul class="nav nav-tabs custom-tabs ">
                             <li class="nav-item">
-                                <a class="nav-link " aria-current="page" href="perfil.html">Perfil</a>
+                                <a class="nav-link " aria-current="page" href="usuario">Perfil</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="EstadosContables.html">Mis Cuentas</a>
+                                <a class="nav-link" href="cuentas">Mis Cuentas</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" href="movimientos.html">Mis Movimientos </a>
+                                <a class="nav-link active" href="estado_contable">Mis Movimientos </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="perfil.html">Estado Contable</a>
+                                <a class="nav-link" href="estado_contable?action=query">Estado Contable</a>
                             </li>
                         </ul>
                     </div>
@@ -61,11 +61,11 @@
                                     <div class="row align-items-center">
                                         <div class="col">
                                             <span class="input-group-text">Fecha Inicio</span>
-                                            <input name="start_date" type="month" class="form-control" >
+                                            <input name="start_date" type="month" class="form-control" value="${startMes}">
                                         </div>
                                         <div class="col">
                                             <span class="input-group-text">Fecha Fin</span>
-                                            <input name="end_date" type="month" class="form-control">
+                                            <input name="end_date" type="month" class="form-control" value="${endMes}">
                                         </div>
                                         <div class="col botton-control">
                                             <button type="submit" class="btn btn-primary btn-lg consulta">Consultar</button>
@@ -78,7 +78,7 @@
                             <table>
                                 <thead>
                                     <tr class="table100-head">
-                                        <th class="column1">Fecha de RealizaciÃ³n</th>
+                                        <th class="column1">Fecha de Realización</th>
                                         <th class="column2">Concepto</th>
                                         <th class="column3">Valor</th>
                                         <th class="column4">Cuenta de Origen</th>

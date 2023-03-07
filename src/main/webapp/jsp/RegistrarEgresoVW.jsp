@@ -35,16 +35,16 @@
 					<div class="container navegacion" style="margin-bottom: 0px;">
 						<ul class="nav nav-tabs custom-tabs ">
 							<li class="nav-item">
-								<a class="nav-link " aria-current="page" href="perfil.html">Perfil</a>
+								<a class="nav-link " aria-current="page" href="usuario">Perfil</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link active" href="EstadosContables.html">Mis Cuentas</a>
+								<a class="nav-link active" href="cuentas">Mis Cuentas</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="movimientos.html">Mis Movimientos </a>
+								<a class="nav-link" href="estado_contable">Mis Movimientos </a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="perfil.html">Estado Contable</a>
+								<a class="nav-link" href="estado_contable?action=query">Estado Contable</a>
 							</li>
 						</ul>
 					</div>
@@ -54,13 +54,13 @@
 
                         <div class="title-container">
                             <span class="login100-form-title-tabs" style="padding-bottom: 0px; ">
-                                Registrar Ingreso
+                                Registrar Egreso 
                             </span>
                             <span class="login100-form-subtitle fs-15" style="padding-bottom: 2px;">
-                                <br>Ingrese información sobre el ingreso de la cuenta ${sourceCuenta.nombre}<br>
+                                <br>Aqui podras registrar un egreso de la cuenta ${sourceCuenta.nombre} <br>
                             </span>
                             <div class="input-container">
-                                Ingresa la información del ingreso de la cuenta::
+                                Ingresa la información del egreso de la cuenta::
                                 <div><br></div>
                                 <form method="POST">
                                     <input required hidden name="id_source" value="${sourceCuenta.id}">
@@ -73,14 +73,12 @@
                                         <span class="input-group-text">Valor</span>
                                         <input type="number" class="form-control" required id="value" name="value" step="0.01" >
                                         </div>
-
                                         <div class="col">
                                             <span class="input-group-text">Fecha</span>
-                                            <input type="date" class="form-control" required id="value" name="date" >
-                                            </div>
-
+                                            <input type="date" class="form-control" required id="value" name="date" value="${hoy}">
+                                        </div>
                                         <div class="col">
-                                            <span class="input-group-text">Cuenta Receptora</span>
+                                            <span class="input-group-text">Cuenta Proveedora</span>
                                             <select required id="recipient" name="id_recipient" class="form-control">
                                                 <c:forEach items="${potentialRecipients}" var="recipient">
                                                     <option value="${recipient.id}">${recipient.nombre}</option>

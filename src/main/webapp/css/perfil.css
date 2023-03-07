@@ -266,3 +266,54 @@ tbody tr:hover {
         padding-right: 15px
     }
 }
+
+
+/*Cristal Cards for acction in accounts*/
+.card-glass {
+    transform-style: preserve-3d;
+    height: fit-content;
+    background: linear-gradient(#2DC2BD,rgba(255, 255, 255, 0.019));
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    
+    min-height: 20vh;
+    width: fit-content;
+    margin: 50px 20px;
+    border-radius: 20px;
+    color: rgb(0, 0, 0);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.466);
+    place-items: center;
+    display: grid;
+    transition: all 0.75s ease;
+    text-align: center;
+}
+
+
+.card-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 20px;
+}
+
+.dinero{
+    font-size: 2rem;
+    font-weight: 300;
+    color: #000000;
+}
+
+.card-buttons .card-link{
+    color: #0015fe;
+
+}
+
+.card-buttons .card-link:hover{
+    color: #000802;
+    text-decoration: none;
+}
+
+.list-group-item .card-link{
+    color: #00A1B2;
+    font: 2em sans-serif;
+}

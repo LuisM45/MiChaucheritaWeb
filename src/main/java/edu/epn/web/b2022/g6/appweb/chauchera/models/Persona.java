@@ -110,7 +110,7 @@ public class Persona {
     }
     
     //@GetCuenta. NO ES USADO
-    public Cuenta consultarCuenta(int id) {
+    public Cuenta consultarCuenta(Integer id) {
         return cuentas.stream()
                 .filter(t->t.getId()==id)
                 .findFirst().orElse(null);

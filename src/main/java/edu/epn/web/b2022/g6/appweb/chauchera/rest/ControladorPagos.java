@@ -41,7 +41,7 @@ public class ControladorPagos extends HttpServlet {
             if(user==null) response.sendRedirect("login");
             return user;
         } catch (IOException ex) {
-            Logger.getLogger(ControladorCuenta.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ControladorPersona.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     } 

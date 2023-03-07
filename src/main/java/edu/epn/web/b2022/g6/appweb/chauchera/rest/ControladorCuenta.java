@@ -1,145 +1,133 @@
 package edu.epn.web.b2022.g6.appweb.chauchera.rest;
 
-import edu.epn.web.b2022.g6.appweb.chauchera.controllers.*;
-import com.sun.net.httpserver.HttpServer;
+import edu.epn.web.b2022.g6.appweb.chauchera.controllers.JSON.ParserJSONProxy;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Cuenta;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.Persona;
+import edu.epn.web.b2022.g6.appweb.chauchera.models.TipoCuenta;
 import edu.epn.web.b2022.g6.appweb.chauchera.models.daos.DaoFactory;
-import java.io.IOException;
-import java.io.PrintWriter;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
  * @author luism
  */
-public class ControladorCuenta extends HttpServlet { 
+@Path("/cuenta")
+public class ControladorCuenta extends Application { 
     
-    private Persona getUser(HttpServletRequest request, HttpServletResponse response){
-        try {
-            Persona user = (Persona) request.getSession().getAttribute("user");
-            if(user==null) response.sendRedirect("login");
-            return user;
-        } catch (IOException ex) {
-            Logger.getLogger(ControladorCuenta.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
     
-    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        Persona user = (Persona) getUser(request, response);
-        if(user==null) return;
+    @POST
+    @Path("/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCuenta(
+            @FormParam("username") String username,
+            @FormParam("password") String password,
+            @FormParam("q") String query,
+            @FormParam("type") String type
+    ){
+        if(username==null || password==null)
+            return Response.status(401).entity("Missing parameters").build();
         
-        String action = request.getParameter("action");
-        if(action==null) action="list";
-        
-        switch (action) {
-            case "create": crearCuenta(request, response);
-                break;
-            case "update": actualizarCuenta(request, response);
-                break;
-            case "delete": eliminarCuenta(request, response);
-                break;
-            case "list":
-            default: listarCuenta(request, response);
-        }
-    }
-    
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
+        Persona p = DaoFactory.getDaoFactory().getPersonaDAO().getByCredentials(username, password);
+        if(p==null)
+            return Response.status(401).entity("Incorrect credentials").build();
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+        final String ftype = type==null?"":type;
+        final String fquery = query==null?"":query;
+        Collection<Cuenta> cuentas= switch(ftype){
+            case "id"-> p.getCuentasView().stream().filter(t->t.getId().toString().equals(fquery)).toList();
+            case "name"->p.getCuentasView().stream().filter(t->t.getNombre().toLowerCase().contains(fquery.toLowerCase())).toList();
+            default-> p.getCuentasView();
+        };
+        
+        return Response.status(200).entity(cuentas.stream().map(ParserJSONProxy::parseCuentaBase).toList()).build();
     }
     
-    
-    private void listarCuenta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        Persona user = getUser(request, response);
-        user.getCuentasView().forEach(t->t.setValorTotal());
-        request.setAttribute("user", user);
-        Map<String,List<Cuenta>> cuentasPorTipo = user.getCuentasView()
-                .stream()
-                .collect(Collectors.groupingBy(t->t.getTipoCuenta().getNombre()));
+    @POST
+    @Path("/new")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response postCuenta(
+            @FormParam("username") String username,
+            @FormParam("password") String password,
+            @FormParam("name") String name,
+            @FormParam("type") String type
+    ){
+        if(username==null || password==null)
+            return Response.status(400).entity("Missing parameters").build();
         
-        request.setAttribute("cuentasIngreso", cuentasPorTipo.get("INGRESO"));
-        request.setAttribute("cuentasEgreso", cuentasPorTipo.get("EGRESO"));
-        request.setAttribute("cuentasIngresoEgreso", cuentasPorTipo.get("INGRESO_EGRESO"));
-        request.getRequestDispatcher("jsp/ListarCuentasVW.jsp").forward(request, response);
+        Persona p = DaoFactory.getDaoFactory().getPersonaDAO().getByCredentials(username, password);
+        if(p==null)
+            return Response.status(401).entity("Incorrect credentials").build();
+        
+        TipoCuenta tipoCuenta = DaoFactory.getDaoFactory().getTipoCuentaDAO().getByName(type);
+        if(tipoCuenta==null)
+            return Response.status(400).entity("Wrong parameters").build();
+        
+        Cuenta cuenta = new Cuenta(name, tipoCuenta);
+        p.abrirCuenta(cuenta);
+        DaoFactory.getDaoFactory().getCuentaDAO().create(cuenta);
+        
+        
+        return Response.status(200).entity(ParserJSONProxy.parseCuentaBase(cuenta)).build();
     }
     
-    
-    
-    private void crearCuenta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        String name = request.getParameter("name");
-        String type = request.getParameter("type");
-        if(name==null || type==null){
-            request.getRequestDispatcher("jsp/AbrirCuentaVW.jsp").forward(request, response);
-            return;
-        }
+    @PUT
+    @Path("/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response putCuenta(
+            @FormParam("username") String username,
+            @FormParam("password") String password,
+            @FormParam("id") Integer id,
+            @FormParam("name") String name
+    ){
+        if(username==null || password==null || id==null || name ==null)
+            return Response.status(400).entity("Missing parameters").build();
         
-        Persona user =  getUser(request, response);
-        user.abrirCuenta(new Cuenta(name,DaoFactory.getDaoFactory().getTipoCuentaDAO().getByName(type)));
-        DaoFactory.getDaoFactory().getPersonaDAO().update(user);
-        response.sendRedirect("cuentas");
+        Persona p = DaoFactory.getDaoFactory().getPersonaDAO().getByCredentials(username, password);
+        if(p==null)
+            return Response.status(401).entity("Incorrect credentials").build();
         
-    }
-    
-    private void actualizarCuenta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        Integer id = null;
-        if(request.getParameter("id")!=null) id=Integer.valueOf(request.getParameter("id"));
+        Cuenta cuenta = p.consultarCuenta(id);
+        if(null==cuenta)
+            return Response.status(401).entity("Incorrect id").build();
         
-        String name = request.getParameter("name");
-        if(name==null || id==null){
-            Persona user = getUser(request, response);
-            request.setAttribute("cuenta", user.consultarCuenta(id));
-            request.getRequestDispatcher("jsp/ActualizarCuentaVW.jsp").forward(request, response);
-            return;
-        }
-        
-        Persona user =  getUser(request, response);
-        Cuenta cuenta = user.consultarCuenta(id);
         cuenta.setNombre(name);
+        // p.setPassword(password);
+        
         DaoFactory.getDaoFactory().getCuentaDAO().update(cuenta);
-        response.sendRedirect("cuentas");
-        
+        return Response.status(200).entity(ParserJSONProxy.parseCuentaBase(cuenta)).build();
     }
     
-    private void eliminarCuenta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-        Integer id = null;
-        if(request.getParameter("id")!=null) id=Integer.valueOf(request.getParameter("id"));
-        if(id==null){
-            Persona user = getUser(request, response);
-            request.setAttribute("cuentas", user.getCuentasView());
-            request.getRequestDispatcher("jsp/CerrarCuentaVW.jsp").forward(request, response);
-            return;
-        }
+    @DELETE
+    @Path("/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteUser(
+            @FormParam("username") String username,
+            @FormParam("password") String password,
+            @FormParam("id") Integer id
+    ){
+        if(username==null || password==null || id==null)
+            return Response.status(400).entity("Missing parameters").build();
         
-        Persona user =  getUser(request, response);
-        Cuenta cuenta = user.consultarCuenta(id);
+        Persona p = DaoFactory.getDaoFactory().getPersonaDAO().getByCredentials(username, password);
+        if(p==null)
+            return Response.status(401).entity("Incorrect credentials").build();
         
-        DaoFactory.getDaoFactory().getCuentaDAO().delete(id);
-        user.cerrarCuenta(id);
-        response.sendRedirect("cuentas");
+        Cuenta cuenta = p.consultarCuenta(id);
+        if(null==cuenta)
+            return Response.status(401).entity("Incorrect id").build();
+        
+        p.cerrarCuenta(cuenta.getId());
+        
+        DaoFactory.getDaoFactory().getCuentaDAO().delete(cuenta.getId());
+        return Response.status(200).entity("SUCCESS").build();
     }
-    
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

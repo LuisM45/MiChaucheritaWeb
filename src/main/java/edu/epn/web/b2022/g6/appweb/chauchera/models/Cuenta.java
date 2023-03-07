@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -136,11 +137,18 @@ public class Cuenta {
         return tipoCuenta;
     }
 
-    public Collection getMovimientosGeneradosView() {
+    public Collection<Movimiento> getMovimientosGeneradosView() {
         return Collections.unmodifiableCollection(movimientosGenerados);
     }
     
-    public Collection getMovimientosRecibidosView() {
+    public Movimiento getMovimientos(int id) {
+        return Stream.concat(movimientosGenerados.stream(),movimientosRecibidos.stream())
+                .filter(t->t.getId()==id)
+                .findAny()
+                .orElse(null);
+    }
+    
+    public Collection<Movimiento> getMovimientosRecibidosView() {
         return Collections.unmodifiableCollection(movimientosRecibidos);
     }
     

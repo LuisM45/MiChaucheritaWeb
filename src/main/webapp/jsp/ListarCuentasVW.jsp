@@ -35,16 +35,16 @@
 					<div class="container navegacion" style="margin-bottom: 0px;">
 						<ul class="nav nav-tabs custom-tabs ">
 							<li class="nav-item">
-								<a class="nav-link " aria-current="page" href="perfil.html">Perfil</a>
+								<a class="nav-link " aria-current="page" href="usuario">Perfil</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link active" href="EstadosContables.html">Mis Cuentas</a>
+								<a class="nav-link active" href="cuentas">Mis Cuentas</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="movimientos.html">Mis Movimientos </a>
+								<a class="nav-link" href="">Mis Movimientos </a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="perfil.html">Estado Contable</a>
+								<a class="nav-link" href="estado_contable">Estado Contable</a>
 							</li>
 						</ul>
 					</div>
